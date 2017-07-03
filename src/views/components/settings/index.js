@@ -14,7 +14,6 @@ import L10nManager from '../../../modules/L10nManager';
 import Searcher from '../../../modules/Searcher';
 import DB from '../../../modules/Database';
 
-
 import L10nSpan from '../shared/l10n-span';
 import Notifier from '../../modules/Notifier';
 import Dialog from '../../modules/Dialog';
@@ -37,10 +36,14 @@ class SettingsComponent extends Component {
     this._onTopRankingChange = this._onTopRankingChange.bind(this);
     this._onSearcherChange = this._onSearcherChange.bind(this);
     this._onTrackFormatChange = this._onTrackFormatChange.bind(this);
-    this._onClickToImportYoutubePlaylist = this._onClickToImportYoutubePlaylist.bind(this);
+    this._onClickToImportYoutubePlaylist = this._onClickToImportYoutubePlaylist.bind(
+      this
+    );
     this._onFormSubmit = this._onFormSubmit.bind(this);
     this._onClickToBackupLocalData = this._onClickToBackupLocalData.bind(this);
-    this._onClickToBackupDropboxData = this._onClickToBackupDropboxData.bind(this);
+    this._onClickToBackupDropboxData = this._onClickToBackupDropboxData.bind(
+      this
+    );
     this._onClickToSyncLocalData = this._onClickToSyncLocalData.bind(this);
     this._onClickToSyncDropboxData = this._onClickToSyncDropboxData.bind(this);
     this._onClickToUpdatePlayer = this._onClickToUpdatePlayer.bind(this);
@@ -50,8 +53,9 @@ class SettingsComponent extends Component {
   componentDidMount() {
     // Country
     const countryData = TopRanking.getCountryList();
-    let defaultCountryCode =
-      PreferenceManager.getPreference('default.topRanking.countryCode');
+    let defaultCountryCode = PreferenceManager.getPreference(
+      'default.topRanking.countryCode'
+    );
     this._makeTopRankingOptions(countryData, defaultCountryCode);
 
     // Languages
@@ -63,9 +67,8 @@ class SettingsComponent extends Component {
     this._buildTrackFormatOptions();
 
     // Searchers
-    Searcher.getSupportedSearchers().then((searchers) => {
-      let defaultSearcher =
-        PreferenceManager.getPreference('default.searcher');
+    Searcher.getSupportedSearchers().then(searchers => {
+      let defaultSearcher = PreferenceManager.getPreference('default.searcher');
       this._makeSearcherOptions(searchers, defaultSearcher);
     });
 
@@ -76,23 +79,25 @@ class SettingsComponent extends Component {
       this.setState(obj);
     });
 
-    L10nManager.on('language-changed', (newLanguage) => {
+    L10nManager.on('language-changed', newLanguage => {
       PreferenceManager.setPreference('default.language', newLanguage);
 
       // We need to rebuild options when language is changed
       this._buildTrackFormatOptions();
     });
 
-    Searcher.on('searcher-changed', (newSearcher) => {
+    Searcher.on('searcher-changed', newSearcher => {
       PreferenceManager.setPreference('default.searcher', newSearcher);
     });
 
-    TopRanking.on('topRanking-changed', (newCountryCode) => {
-      PreferenceManager.setPreference('default.topRanking.countryCode',
-        newCountryCode);
+    TopRanking.on('topRanking-changed', newCountryCode => {
+      PreferenceManager.setPreference(
+        'default.topRanking.countryCode',
+        newCountryCode
+      );
     });
 
-    TrackInfoFetcher.on('format-changed', (newFormat) => {
+    TrackInfoFetcher.on('format-changed', newFormat => {
       PreferenceManager.setPreference('default.track.format', newFormat);
     });
 
@@ -108,22 +113,22 @@ class SettingsComponent extends Component {
     defaultLanguage = defaultLanguage || 'en';
 
     let select = this.refs.supportedLanguagesSelect;
-    languages.forEach((language) => {
+    languages.forEach(language => {
       let option = document.createElement('option');
       option.text = language.label;
       option.value = language.lang;
-      option.selected = (language.lang === defaultLanguage);
+      option.selected = language.lang === defaultLanguage;
       select.add(option);
     });
   }
 
   _makeTopRankingOptions(countryData, defaultCountryCode) {
     let select = this.refs.topRankingSelect;
-    Object.keys(countryData).forEach((countryCode) => {
+    Object.keys(countryData).forEach(countryCode => {
       let option = document.createElement('option');
       option.text = countryData[countryCode];
       option.value = countryCode;
-      option.selected = (defaultCountryCode === countryCode);
+      option.selected = defaultCountryCode === countryCode;
       select.add(option);
     });
   }
@@ -133,13 +138,13 @@ class SettingsComponent extends Component {
     defaultSearcher = defaultSearcher || 'youtube';
 
     let select = this.refs.supportedSearcherSelect;
-    searchers.forEach((searcherName) => {
+    searchers.forEach(searcherName => {
       let option = document.createElement('option');
       let l10nId = `settings_option_searcher_${searcherName}`;
 
       option.text = _(l10nId);
       option.value = searcherName;
-      option.selected = (searcherName === defaultSearcher);
+      option.selected = searcherName === defaultSearcher;
       select.add(option);
     });
   }
@@ -156,11 +161,11 @@ class SettingsComponent extends Component {
     }
 
     // then build
-    trackFormats.forEach((format) => {
+    trackFormats.forEach(format => {
       let option = document.createElement('option');
       option.text = _(format.l10nId);
       option.value = format.value;
-      option.selected = (format.value === defaultFormat);
+      option.selected = format.value === defaultFormat;
       select.add(option);
     });
   }
@@ -199,14 +204,16 @@ class SettingsComponent extends Component {
     Dialog.prompt({
       title: _('settings_option_enter_playlist_url_prompt'),
       value: '',
-      callback: (url) => {
+      callback: url => {
         if (url) {
-          YoutubeImporter.import(url).then((playlist) => {
-            Notifier.alert(playlist.name + ' is created !');
-          }).catch((error) => {
-            Notifier.alert(error);
-            console.log(error);
-          });
+          YoutubeImporter.import(url)
+            .then(playlist => {
+              Notifier.alert(playlist.name + ' is created !');
+            })
+            .catch(error => {
+              Notifier.alert(error);
+              console.log(error);
+            });
         }
       }
     });
@@ -217,23 +224,28 @@ class SettingsComponent extends Component {
   }
 
   _onClickToBackupLocalData() {
-    AppDialog.showOpenDialog({
-      title: 'Where to backup your track ?',
-      properties: ['openDirectory']
-    }, (folderPath) => {
-      Notifier.alert('Start to backup data !');
+    AppDialog.showOpenDialog(
+      {
+        title: 'Where to backup your track ?',
+        properties: ['openDirectory']
+      },
+      folderPath => {
+        Notifier.alert('Start to backup data !');
 
-      let playlists = PlaylistManager.export();
-      LocalBackuper.backup(playlists, {
-        basePath: folderPath[0],
-        folderName: 'kaku-backup'
-      }).then(() => {
-        Notifier.alert('backup data successfully :)');
-      }).catch((error) => {
-        Notifier.alert('Something went wrong, please try again');
-        console.log(error);
-      });
-    });
+        let playlists = PlaylistManager.export();
+        LocalBackuper.backup(playlists, {
+          basePath: folderPath[0],
+          folderName: 'kaku-backup'
+        })
+          .then(() => {
+            Notifier.alert('backup data successfully :)');
+          })
+          .catch(error => {
+            Notifier.alert('Something went wrong, please try again');
+            console.log(error);
+          });
+      }
+    );
   }
 
   _onClickToBackupDropboxData() {
@@ -242,119 +254,129 @@ class SettingsComponent extends Component {
 
     DropboxBackuper.backup(playlists, {
       folderPath: '/playlists'
-    }).then(() => {
-      Notifier.alert('backup data successfully :)');
-    }).catch((error) => {
-      Notifier.alert('Something went wrong, please try again');
-      console.log(error);
-    });
+    })
+      .then(() => {
+        Notifier.alert('backup data successfully :)');
+      })
+      .catch(error => {
+        Notifier.alert('Something went wrong, please try again');
+        console.log(error);
+      });
   }
 
   _onClickToSyncLocalData() {
-    Dialog.confirm(
-      _('settings_option_sync_data_confirm'),
-      (sure) => {
-        // make UX better
-        setTimeout(() => {
-          AppDialog.showOpenDialog({
+    Dialog.confirm(_('settings_option_sync_data_confirm'), sure => {
+      // make UX better
+      setTimeout(() => {
+        AppDialog.showOpenDialog(
+          {
             title: 'Where is your backup file ?',
             properties: ['openDirectory']
-          }, (folderPath) => {
+          },
+          folderPath => {
             if (folderPath) {
               Notifier.alert('Start to sync data !');
 
               LocalBackuper.syncDataBack({
                 folderPath: folderPath[0]
-              }).then((playlists) => {
-                return PlaylistManager.cleanup().then(() => {
-                  return PlaylistManager.import(playlists);
+              })
+                .then(playlists => {
+                  return PlaylistManager.cleanup().then(() => {
+                    return PlaylistManager.import(playlists);
+                  });
+                })
+                .then(() => {
+                  Notifier.alert('Sync data successfully :)');
+                })
+                .catch(error => {
+                  Notifier.alert('Something went wrong, please try again');
+                  console.log(error);
                 });
-              }).then(() => {
-                Notifier.alert('Sync data successfully :)');
-              }).catch((error) => {
-                Notifier.alert('Something went wrong, please try again');
-                console.log(error);
-              });
             }
-          });
-        }, 1000);
+          }
+        );
+      }, 1000);
     });
   }
 
   _onClickToSyncDropboxData() {
-    Dialog.confirm(
-      _('settings_option_sync_data_confirm'),
-      (sure) => {
-        if (sure) {
-          Notifier.alert('Start to sync data !');
+    Dialog.confirm(_('settings_option_sync_data_confirm'), sure => {
+      if (sure) {
+        Notifier.alert('Start to sync data !');
 
-          // make UX better
-          setTimeout(() => {
-            // start to sync data from Dropbox
-            DropboxBackuper.syncDataBack({
-              folderPath: '/playlists'
-            }).then((playlists) => {
+        // make UX better
+        setTimeout(() => {
+          // start to sync data from Dropbox
+          DropboxBackuper.syncDataBack({
+            folderPath: '/playlists'
+          })
+            .then(playlists => {
               return PlaylistManager.cleanup().then(() => {
                 return PlaylistManager.import(playlists);
               });
-            }).then(() => {
+            })
+            .then(() => {
               Notifier.alert('Sync data successfully :)');
-            }).catch((error) => {
+            })
+            .catch(error => {
               Notifier.alert('Something went wrong, please try again');
               console.log(error);
             });
-          }, 1000);
-        }
+        }, 1000);
+      }
     });
   }
 
   _onClickToUpdatePlayer() {
-    Notifier.alert('Start to update, please don\'t play music when updating');
+    Notifier.alert("Start to update, please don't play music when updating");
 
     const force = true;
-    AutoUpdater.updateYoutubeDl(force).then(() => {
-      Notifier.alert('Success ! You are good to go now :)');
-    }).catch((error) => {
-      Notifier.alert('Something went wrong when updating');
-      console.log(error);
-    });
+    AutoUpdater.updateYoutubeDl(force)
+      .then(() => {
+        Notifier.alert('Success ! You are good to go now :)');
+      })
+      .catch(error => {
+        Notifier.alert('Something went wrong when updating');
+        console.log(error);
+      });
   }
 
   _onClickToResetDatabse() {
-    Dialog.confirm(
-      _('settings_option_reset_database_confirm'),
-      (sure) => {
-        if (sure) {
-          DB.resetDatabase().then(() => {
-            Remote.getCurrentWindow().reload();
-          });
-        }
+    Dialog.confirm(_('settings_option_reset_database_confirm'), sure => {
+      if (sure) {
+        DB.resetDatabase().then(() => {
+          Remote.getCurrentWindow().reload();
+        });
+      }
     });
   }
 
   render() {
-    let isDesktopNotificationEnabled =
-      PreferenceManager.getPreference('desktop.notification.enabled');
+    let isDesktopNotificationEnabled = PreferenceManager.getPreference(
+      'desktop.notification.enabled'
+    );
 
-    let isAlwaysOnTopEnabled =
-      PreferenceManager.getPreference('default.alwaysOnTop.enabled');
+    let isAlwaysOnTopEnabled = PreferenceManager.getPreference(
+      'default.alwaysOnTop.enabled'
+    );
 
-    let isChatroomEnabled =
-      PreferenceManager.getPreference('default.chatroom.enabled');
+    let isChatroomEnabled = PreferenceManager.getPreference(
+      'default.chatroom.enabled'
+    );
 
     return (
       <div className="settings-slot">
         <div className="header clearfix">
           <h1>
-            <i className="fa fa-fw fa-cog"></i>
-            <L10nSpan l10nId="settings_header"/>
+            <i className="fa fa-fw fa-cog" />
+            <L10nSpan l10nId="settings_header" />
           </h1>
         </div>
         <div className="settings-component">
           <form className="form-horizontal" onSubmit={this._onFormSubmit}>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_desktop_notificaion_enabled"/>
+                <L10nSpan l10nId="settings_option_desktop_notificaion_enabled" />
               </label>
               <div className="col-sm-3">
                 <div className="checkbox">
@@ -363,14 +385,15 @@ class SettingsComponent extends Component {
                       type="checkbox"
                       checked={isDesktopNotificationEnabled}
                       data-key="desktop.notification.enabled"
-                      onChange={this._onChangeToSetPreference}/>
+                      onChange={this._onChangeToSetPreference}
+                    />
                   </label>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_always_on_top_enabled"/>
+                <L10nSpan l10nId="settings_option_always_on_top_enabled" />
               </label>
               <div className="col-sm-3">
                 <div className="checkbox">
@@ -379,14 +402,15 @@ class SettingsComponent extends Component {
                       type="checkbox"
                       checked={isAlwaysOnTopEnabled}
                       data-key="default.alwaysOnTop.enabled"
-                      onChange={this._onChangeToSetPreference}/>
+                      onChange={this._onChangeToSetPreference}
+                    />
                   </label>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_chatroom_enabled"/>
+                <L10nSpan l10nId="settings_option_chatroom_enabled" />
               </label>
               <div className="col-sm-3">
                 <div className="checkbox">
@@ -395,60 +419,63 @@ class SettingsComponent extends Component {
                       type="checkbox"
                       checked={isChatroomEnabled}
                       data-key="default.chatroom.enabled"
-                      onChange={this._onChangeToSetPreference}/>
+                      onChange={this._onChangeToSetPreference}
+                    />
                   </label>
                 </div>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_default_language"/>
+                <L10nSpan l10nId="settings_option_default_language" />
               </label>
               <div className="col-sm-3">
                 <select
                   className="form-control"
                   onChange={this._onLanguageChange}
-                  ref="supportedLanguagesSelect">
-                </select>
+                  ref="supportedLanguagesSelect"
+                />
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_default_top_ranking_country"/>
+                <L10nSpan l10nId="settings_option_default_top_ranking_country" />
               </label>
               <div className="col-sm-3">
                 <select
                   className="form-control"
                   onChange={this._onTopRankingChange}
-                  ref="topRankingSelect">
-                </select>
+                  ref="topRankingSelect"
+                />
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_default_searcher"/>
+                <L10nSpan l10nId="settings_option_default_searcher" />
               </label>
               <div className="col-sm-3">
                 <select
                   className="form-control"
                   onChange={this._onSearcherChange}
-                  ref="supportedSearcherSelect"></select>
+                  ref="supportedSearcherSelect"
+                />
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_default_track_format"/>
+                <L10nSpan l10nId="settings_option_default_track_format" />
               </label>
               <div className="col-sm-3">
                 <select
                   className="form-control"
                   onChange={this._onTrackFormatChange}
-                  ref="trackFormatSelect"></select>
+                  ref="trackFormatSelect"
+                />
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_import_playlist"/>
+                <L10nSpan l10nId="settings_option_import_playlist" />
               </label>
               <div className="col-sm-6">
                 <div className="btn-group" role="group">
@@ -457,15 +484,19 @@ class SettingsComponent extends Component {
                       className="btn btn-default dropdown-toggle"
                       data-toggle="dropdown"
                       aria-haspopup="true"
-                      aria-expanded="false">
-                        <L10nSpan l10nId="settings_option_choose_import_playlist_method"/>
-                        <span className="caret"></span>
+                      aria-expanded="false"
+                    >
+                      <L10nSpan l10nId="settings_option_choose_import_playlist_method" />
+                      <span className="caret" />
                     </button>
                     <ul className="dropdown-menu">
                       <li>
-                        <a href="#" onClick={this._onClickToImportYoutubePlaylist}>
-                          <i className="fa fa-fw fa-youtube"></i>
-                          <L10nSpan l10nId="settings_option_import_youtube_playlist"/>
+                        <a
+                          href="#"
+                          onClick={this._onClickToImportYoutubePlaylist}
+                        >
+                          <i className="fa fa-fw fa-youtube" />
+                          <L10nSpan l10nId="settings_option_import_youtube_playlist" />
                         </a>
                       </li>
                     </ul>
@@ -475,7 +506,7 @@ class SettingsComponent extends Component {
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="settings_option_backup"/>
+                <L10nSpan l10nId="settings_option_backup" />
               </label>
               <div className="col-sm-6">
                 <div className="btn-group" role="group">
@@ -484,34 +515,35 @@ class SettingsComponent extends Component {
                       className="btn btn-default dropdown-toggle"
                       data-toggle="dropdown"
                       aria-haspopup="true"
-                      aria-expanded="false">
-                        <L10nSpan l10nId="settings_option_choose_backup_method"/>
-                        <span className="caret"></span>
+                      aria-expanded="false"
+                    >
+                      <L10nSpan l10nId="settings_option_choose_backup_method" />
+                      <span className="caret" />
                     </button>
                     <ul className="dropdown-menu">
                       <li>
                         <a href="#" onClick={this._onClickToBackupLocalData}>
-                          <i className="fa fa-fw fa-desktop"></i>
-                          <L10nSpan l10nId="settings_option_backup_to_local"/>
+                          <i className="fa fa-fw fa-desktop" />
+                          <L10nSpan l10nId="settings_option_backup_to_local" />
                         </a>
                       </li>
                       <li>
                         <a href="#" onClick={this._onClickToBackupDropboxData}>
-                          <i className="fa fa-fw fa-dropbox"></i>
-                          <L10nSpan l10nId="settings_option_backup_to_dropbox"/>
+                          <i className="fa fa-fw fa-dropbox" />
+                          <L10nSpan l10nId="settings_option_backup_to_dropbox" />
                         </a>
                       </li>
-                      <li className="divider" role="separator"></li>
+                      <li className="divider" role="separator" />
                       <li>
                         <a href="#" onClick={this._onClickToSyncLocalData}>
-                          <i className="fa fa-fw fa-desktop"></i>
-                          <L10nSpan l10nId="settings_option_sync_data_from_local"/>
+                          <i className="fa fa-fw fa-desktop" />
+                          <L10nSpan l10nId="settings_option_sync_data_from_local" />
                         </a>
                       </li>
                       <li>
                         <a href="#" onClick={this._onClickToSyncDropboxData}>
-                          <i className="fa fa-fw fa-dropbox"></i>
-                          <L10nSpan l10nId="settings_option_sync_data_from_dropbox"/>
+                          <i className="fa fa-fw fa-dropbox" />
+                          <L10nSpan l10nId="settings_option_sync_data_from_dropbox" />
                         </a>
                       </li>
                     </ul>
@@ -523,8 +555,9 @@ class SettingsComponent extends Component {
               <div className="col-sm-offset-3 col-sm-3">
                 <button
                   className="btn btn-primary"
-                  onClick={this._onClickToUpdatePlayer}>
-                    <L10nSpan l10nId="settings_option_update_player"/>
+                  onClick={this._onClickToUpdatePlayer}
+                >
+                  <L10nSpan l10nId="settings_option_update_player" />
                 </button>
               </div>
             </div>
@@ -532,8 +565,9 @@ class SettingsComponent extends Component {
               <div className="col-sm-offset-3 col-sm-3">
                 <button
                   className="btn btn-danger"
-                  onClick={this._onClickToResetDatabse}>
-                    <L10nSpan l10nId="settings_option_reset_database"/>
+                  onClick={this._onClickToResetDatabse}
+                >
+                  <L10nSpan l10nId="settings_option_reset_database" />
                 </button>
               </div>
             </div>

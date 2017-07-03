@@ -31,17 +31,15 @@ class LocalBackuper {
       Fs.lstat(folderPath, (error, stats) => {
         // if no such folder, then create
         if (error) {
-          Fs.mkdir(folderPath, (error) => {
+          Fs.mkdir(folderPath, error => {
             // Maybe I/O is blocked, we can't do following works anymore.
             if (error) {
               reject(error);
-            }
-            else {
+            } else {
               resolve();
             }
           });
-        }
-        else {
+        } else {
           resolve();
         }
       });
@@ -51,12 +49,12 @@ class LocalBackuper {
 
   _writeFiles(folderPath, datas) {
     let promises = [];
-    datas.forEach((data) => {
+    datas.forEach(data => {
       let promise = new Promise((resolve, reject) => {
         let content = JSON.stringify(data);
         let fileName = data.id + '.txt';
         let filePath = Path.join(folderPath, fileName);
-        Fs.writeFile(filePath, content, (error) => {
+        Fs.writeFile(filePath, content, error => {
           // no matter success or not, we would still keep going.
           if (error) {
             console.log(error);
@@ -76,21 +74,19 @@ class LocalBackuper {
         // need to know what the error is
         if (error) {
           reject(error);
-        }
-        else {
-          const allowedFiles = files.filter((fileName) => {
+        } else {
+          const allowedFiles = files.filter(fileName => {
             return fileName.match(/.txt$/);
           });
 
           let promises = [];
-          allowedFiles.forEach((fileName) => {
+          allowedFiles.forEach(fileName => {
             let promise = new Promise((resolve, reject) => {
               let filePath = Path.join(folderPath, fileName);
               Fs.readFile(filePath, (error, content) => {
                 if (error) {
                   reject(error);
-                }
-                else {
+                } else {
                   resolve(JSON.parse(content));
                 }
               });
@@ -98,11 +94,13 @@ class LocalBackuper {
             promises.push(promise);
           });
 
-          Promise.all(promises).then((contents) => {
-            resolve(contents);
-          }).catch((error) => {
-            reject(error);
-          });
+          Promise.all(promises)
+            .then(contents => {
+              resolve(contents);
+            })
+            .catch(error => {
+              reject(error);
+            });
         }
       });
     });

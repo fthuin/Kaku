@@ -48,17 +48,17 @@ class TrackModeButton extends Component {
     let mode = this.state.mode;
 
     let listButtonClass = ClassNames({
-      'btn': true,
+      btn: true,
       'btn-default': true,
       'track-list-mode': true,
-      'active': (mode === 'list')
+      active: mode === 'list'
     });
 
     let squareButtonClass = ClassNames({
-      'btn': true,
+      btn: true,
       'btn-default': true,
       'track-square-mode': true,
-      'active': (mode === 'square')
+      active: mode === 'square'
     });
 
     return (
@@ -67,15 +67,17 @@ class TrackModeButton extends Component {
           type="button"
           className={listButtonClass}
           data-mode="list"
-          onClick={this._onClick}>
-            <i className="fa fa-fw fa-list"></i>
+          onClick={this._onClick}
+        >
+          <i className="fa fa-fw fa-list" />
         </button>
         <button
           type="button"
           className={squareButtonClass}
           data-mode="square"
-          onClick={this._onClick}>
-            <i className="glyphicon glyphicon-th"></i>
+          onClick={this._onClick}
+        >
+          <i className="glyphicon glyphicon-th" />
         </button>
       </div>
     );

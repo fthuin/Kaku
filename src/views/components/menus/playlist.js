@@ -22,11 +22,9 @@ class PlaylistUI extends React.Component {
     let removeMenuItem = new MenuItem({
       label: 'Remove this playlist',
       click: () => {
-        PlaylistManager
-          .removePlaylistById(playlist.id)
-          .catch((error) => {
-            Notifier.alert(error);
-          });
+        PlaylistManager.removePlaylistById(playlist.id).catch(error => {
+          Notifier.alert(error);
+        });
       }
     });
 
@@ -36,18 +34,18 @@ class PlaylistUI extends React.Component {
         Dialog.prompt({
           title: 'Please input your playlist name',
           value: playlist.name,
-          callback: (rawPlaylistName) => {
+          callback: rawPlaylistName => {
             rawPlaylistName = rawPlaylistName || '';
             var sanitizedPlaylistName = rawPlaylistName.trim();
             if (!sanitizedPlaylistName) {
               // do nothing
-            }
-            else {
-              PlaylistManager
-                .renamePlaylistById(playlist.id, sanitizedPlaylistName)
-                .catch((error) => {
-                  Notifier.alert(error);
-                });
+            } else {
+              PlaylistManager.renamePlaylistById(
+                playlist.id,
+                sanitizedPlaylistName
+              ).catch(error => {
+                Notifier.alert(error);
+              });
             }
           }
         });
@@ -75,11 +73,12 @@ class PlaylistUI extends React.Component {
     let index = this.props.index;
     let playlist = this.props.playlist;
 
-    let clickToShowContextMenu =
-      this._clickToShowContextMenu.bind(this, playlist);
+    let clickToShowContextMenu = this._clickToShowContextMenu.bind(
+      this,
+      playlist
+    );
 
-    let clickToSetTab =
-      this._clickToSetTab.bind(this, playlist.id);
+    let clickToSetTab = this._clickToSetTab.bind(this, playlist.id);
 
     return (
       <li role="presentation" className="playlist">
@@ -89,14 +88,17 @@ class PlaylistUI extends React.Component {
           data-tab-options={playlist.id}
           data-toggle="tab"
           onContextMenu={clickToShowContextMenu}
-          onClick={clickToSetTab}>
-            <i className="icon fa fa-fw fa-lg fa-music"></i>
-            <span className="title">{playlist.name}</span>
-          </a>
+          onClick={clickToSetTab}
+        >
+          <i className="icon fa fa-fw fa-lg fa-music" />
+          <span className="title">
+            {playlist.name}
+          </span>
+        </a>
       </li>
     );
   }
-};
+}
 
 PlaylistUI.propTypes = {
   index: PropTypes.number,

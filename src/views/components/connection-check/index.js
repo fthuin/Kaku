@@ -34,8 +34,8 @@ class ConnectionCheckComponent extends Component {
     return (
       <div className={className}>
         <h1>
-          <i className="fa fa-exclamation-triangle"></i>
-          <L10nSpan l10nId="component_connection_lost"/>
+          <i className="fa fa-exclamation-triangle" />
+          <L10nSpan l10nId="component_connection_lost" />
         </h1>
       </div>
     );

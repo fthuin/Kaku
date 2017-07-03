@@ -28,7 +28,9 @@ class SearchbarComponent extends Component {
     this._showLoader = this._showLoader.bind(this);
     this._doSelctAutoCompleteItem = this._doSelctAutoCompleteItem.bind(this);
     this._onAutoCompleteItemClick = this._onAutoCompleteItemClick.bind(this);
-    this._onAutoCompleteItemMouseEnter = this._onAutoCompleteItemMouseEnter.bind(this);
+    this._onAutoCompleteItemMouseEnter = this._onAutoCompleteItemMouseEnter.bind(
+      this
+    );
     this._closeAutoCompleteList = this._closeAutoCompleteList.bind(this);
     this._cleanSearchbar = this._cleanSearchbar.bind(this);
     this._handleArrowKey = this._handleArrowKey.bind(this);
@@ -48,15 +50,19 @@ class SearchbarComponent extends Component {
     this._searchTimer = window.setTimeout(() => {
       this._showLoader(true);
       Searcher.search(keyword, SEARCH_LIMIT_FOR_AUTO_COMPLETE, false)
-        .then((tracks) => {
-          // we have to reset selectedIndex for each search
-          this.setState({
-            searchTracks: tracks,
-            selectedIndex: -1
-          });
-        }, (error) => {
-          console.log(error);
-        }).then(() => {
+        .then(
+          tracks => {
+            // we have to reset selectedIndex for each search
+            this.setState({
+              searchTracks: tracks,
+              selectedIndex: -1
+            });
+          },
+          error => {
+            console.log(error);
+          }
+        )
+        .then(() => {
           this._showLoader(false);
         });
     }, SEARCH_TIMEOUT);
@@ -96,8 +102,7 @@ class SearchbarComponent extends Component {
       this.setState({
         isSearching: true
       });
-    }
-    else {
+    } else {
       this.setState({
         isSearching: false
       });
@@ -117,8 +122,7 @@ class SearchbarComponent extends Component {
     if (this.state.selectedIndex === -1) {
       window.clearTimeout(this._searchTimer);
       keyword = this.state.keyword;
-    }
-    else if (this.state.selectedIndex >= 0) {
+    } else if (this.state.selectedIndex >= 0) {
       let track = this.state.searchTracks[this.state.selectedIndex];
       keyword = track.title;
       this.setState({
@@ -129,7 +133,7 @@ class SearchbarComponent extends Component {
     this._closeAutoCompleteList();
 
     // then search
-    Searcher.search(keyword, SEARCH_LIMIT_FOR_ALL, true).catch((error) => {
+    Searcher.search(keyword, SEARCH_LIMIT_FOR_ALL, true).catch(error => {
       console.log(error);
     });
   }
@@ -167,13 +171,12 @@ class SearchbarComponent extends Component {
 
     let index = this.state.selectedIndex;
     if (direction === 'up') {
-      index --;
+      index--;
       if (index < -1) {
         index = searchTracks.length - 1;
       }
-    }
-    else {
-      index ++;
+    } else {
+      index++;
       if (index > searchTracks.length - 1) {
         index = -1;
       }
@@ -191,45 +194,47 @@ class SearchbarComponent extends Component {
     let isSearching = this.state.isSearching;
 
     let loaderClass = ClassNames({
-      'loader': true,
-      'show': isSearching
+      loader: true,
+      show: isSearching
     });
 
     return (
       <div className="searchbar-component">
-        <form
-          className="form-inline"
-          onSubmit={this._onSubmit}>
-            <div className="form-group">
-              <span className={loaderClass}>
-                <i className="fa fa-circle-o-notch fa-spin"></i>
-              </span>
-              <input
-                tabIndex="1"
-                className="searchbar-user-input form-control"
-                onChange={this._onInputChange}
-                onKeyDown={this._onKeyDown}
-                onBlur={this._onBlur}
-                value={keyword}
-                placeholder="Find something ..."/>
-            </div>
-          </form>
-          <ul className="autocomplete-list list-unstyled">
-            {searchTracks.map((track, trackIndex) => {
-              let className = ClassNames({
-                'selected': trackIndex == selectedIndex
-              });
-              return <li
+        <form className="form-inline" onSubmit={this._onSubmit}>
+          <div className="form-group">
+            <span className={loaderClass}>
+              <i className="fa fa-circle-o-notch fa-spin" />
+            </span>
+            <input
+              tabIndex="1"
+              className="searchbar-user-input form-control"
+              onChange={this._onInputChange}
+              onKeyDown={this._onKeyDown}
+              onBlur={this._onBlur}
+              value={keyword}
+              placeholder="Find something ..."
+            />
+          </div>
+        </form>
+        <ul className="autocomplete-list list-unstyled">
+          {searchTracks.map((track, trackIndex) => {
+            let className = ClassNames({
+              selected: trackIndex == selectedIndex
+            });
+            return (
+              <li
                 key={trackIndex}
                 className={className}
                 onClick={this._onAutoCompleteItemClick}
                 onMouseEnter={this._onAutoCompleteItemMouseEnter}
-                data-index={trackIndex}>
-                  {track.title}
-              </li>;
-            })}
-          </ul>
-        </div>
+                data-index={trackIndex}
+              >
+                {track.title}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     );
   }
 }

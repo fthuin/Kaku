@@ -25,31 +25,32 @@ class HistoryManager extends EventEmitter {
     if (this._initializedPromise) {
       return this._initializedPromise;
     } else {
-      this._initializedPromise = DB.get('history').catch((error) => {
-        if (error.status === 404) {
-          return DB.put({
-            _id: 'history',
-            tracks: []
+      this._initializedPromise = DB.get('history')
+        .catch(error => {
+          if (error.status === 404) {
+            return DB.put({
+              _id: 'history',
+              tracks: []
+            });
+          } else {
+            throw error;
+          }
+        })
+        .then(doc => {
+          let tracks = doc.tracks || [];
+          this._tracks = tracks.map(rawTrack => {
+            return BaseTrack.fromJSON(rawTrack);
           });
-        } else {
-          throw error;
-        }
-      })
-      .then((doc) => {
-        let tracks = doc.tracks || [];
-        this._tracks = tracks.map((rawTrack) => {
-          return BaseTrack.fromJSON(rawTrack);
+        })
+        .then(() => {
+          // bind needed events for these playlists
+          this.on('history-updated', () => {
+            this._storeTracksToDB();
+          });
+        })
+        .catch(error => {
+          console.log(error);
         });
-      })
-      .then(() => {
-        // bind needed events for these playlists
-        this.on('history-updated', () => {
-          this._storeTracksToDB();
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
 
       return this._initializedPromise;
     }
@@ -85,18 +86,19 @@ class HistoryManager extends EventEmitter {
   }
 
   _storeTracksToDB() {
-    return DB.get('history').then((doc) => {
-      return DB.put({
-        _id: 'history',
-        _rev: doc._rev,
-        tracks: this._tracks.map((track) => {
-          return track.toJSON();
-        })
+    return DB.get('history')
+      .then(doc => {
+        return DB.put({
+          _id: 'history',
+          _rev: doc._rev,
+          tracks: this._tracks.map(track => {
+            return track.toJSON();
+          })
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   }
 }
 

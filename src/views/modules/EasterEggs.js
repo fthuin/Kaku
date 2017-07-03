@@ -51,17 +51,20 @@ class EasterEggs {
     this._cleanup();
     this._sentences.forEach((eachSentence, index) => {
       let timeout = this._ALERT_TIMEOUT * index + this._ALERT_EXTRA_WAITING;
-      let id = setTimeout(((eachSentence) => {
-        return () => {
-          Notifier.alert(decodeURI(eachSentence));
-        };
-      })(eachSentence), timeout);
+      let id = setTimeout(
+        (eachSentence => {
+          return () => {
+            Notifier.alert(decodeURI(eachSentence));
+          };
+        })(eachSentence),
+        timeout
+      );
       this._timerIds.push(id);
     });
   }
 
   _cleanup() {
-    this._timerIds.forEach((id) => {
+    this._timerIds.forEach(id => {
       clearTimeout(id);
     });
   }

@@ -10,8 +10,13 @@ const Tray = Remote.Tray;
 const App = Remote.app;
 
 const _ = L10nManager.get.bind(L10nManager);
-const iconsFolder =
-  path.join(App.getAppPath(), 'src', 'public', 'images', 'icons');
+const iconsFolder = path.join(
+  App.getAppPath(),
+  'src',
+  'public',
+  'images',
+  'icons'
+);
 const trayDefaultIcon = path.join(iconsFolder, 'tray', 'default.png');
 const trayWindowsIcon = path.join(iconsFolder, 'tray', 'windows.ico');
 
@@ -68,12 +73,14 @@ class AppTray {
       },
       {
         label: _('app_tray_help'),
-        submenu: [{
+        submenu: [
+          {
             label: _('app_tray_docs'),
             click() {
               Shell.openExternal('http://kaku.rocks/docs/index.html');
             }
-          }, {
+          },
+          {
             label: _('app_tray_issue'),
             click() {
               Shell.openExternal('https://github.com/EragonJ/Kaku/issues');

@@ -20,7 +20,9 @@ class NewsTag extends Component {
 
     return (
       <div className={className}>
-        <div className="panel-heading">{title}</div>
+        <div className="panel-heading">
+          {title}
+        </div>
         <div
           className="panel-body"
           dangerouslySetInnerHTML={{

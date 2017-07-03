@@ -15,15 +15,16 @@ class AddToPlayQueueButton extends Component {
   }
 
   render() {
-    let isDiabled = (this.props.data.length === 0);
+    let isDiabled = this.props.data.length === 0;
 
     return (
       <button
         className="add-to-play-queue-button btn btn-default"
         onClick={this._clickToAddToPlayQueue}
-        disabled={isDiabled}>
-          <i className="fa fa-fw fa-ellipsis-h"></i>
-          <L10nSpan l10nId="component_add_to_play_queue"/>
+        disabled={isDiabled}
+      >
+        <i className="fa fa-fw fa-ellipsis-h" />
+        <L10nSpan l10nId="component_add_to_play_queue" />
       </button>
     );
   }

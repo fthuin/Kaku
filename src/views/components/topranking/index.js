@@ -16,14 +16,14 @@ class TopRankingComponent extends Component {
 
   componentDidMount() {
     TopRanking.on('topRanking-changed', () => {
-      TopRanking.get().then((tracks) => {
+      TopRanking.get().then(tracks => {
         this.setState({
           tracks: tracks
         });
       });
     });
 
-    TopRanking.get().then((tracks) => {
+    TopRanking.get().then(tracks => {
       this.setState({
         tracks: tracks
       });

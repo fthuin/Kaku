@@ -45,64 +45,70 @@ class TracksComponent extends Component {
     } = this.props;
 
     let trackMode = this.state.trackMode;
-    let noTracks = (tracks.length === 0);
+    let noTracks = tracks.length === 0;
 
     // TODO
     // right now L10nSpan is just a span, we can extend it so that we can
     // also pass plain strings.
     let headerSpan;
     if (headerL10nId) {
-      headerSpan = <L10nSpan l10nId={headerL10nId}/>;
-    }
-    else {
-      headerSpan = <span>{headerWording}</span>;
+      headerSpan = <L10nSpan l10nId={headerL10nId} />;
+    } else {
+      headerSpan = (
+        <span>
+          {headerWording}
+        </span>
+      );
     }
 
     let deleteAllButton;
     if (controls.deleteAllButton) {
-      deleteAllButton =
+      deleteAllButton = (
         <ActionButton
-          l10nId='history_clean_all'
-          buttonClass='btn btn-default clean-button'
-          iconClass='fa fa-fw fa-trash-o'
+          l10nId="history_clean_all"
+          buttonClass="btn btn-default clean-button"
+          iconClass="fa fa-fw fa-trash-o"
           isDisabled={noTracks}
-          onClick={onDeleteAllClick} />
+          onClick={onDeleteAllClick}
+        />
+      );
     }
 
     let trackModeButton;
     if (controls.trackModeButton) {
-      trackModeButton =
-        <TrackModeButton
-          onTrackModeChange={this._onTrackModeChange}/>
+      trackModeButton = (
+        <TrackModeButton onTrackModeChange={this._onTrackModeChange} />
+      );
     }
 
     let playAllButton;
     if (controls.playAllButton) {
-      playAllButton =
+      playAllButton = (
         <ActionButton
-          l10nId='component_play_all'
-          buttonClass='btn btn-default playall-button'
-          iconClass='fa fa-fw fa-play-circle'
+          l10nId="component_play_all"
+          buttonClass="btn btn-default playall-button"
+          iconClass="fa fa-fw fa-play-circle"
           isDisabled={noTracks}
-          onClick={onPlayAllClick} />
+          onClick={onPlayAllClick}
+        />
+      );
     }
 
     let addToPlayQueueButton;
     if (controls.addToPlayQueueButton) {
-      addToPlayQueueButton =
-        <AddToPlayQueueButton data={tracks}/>
+      addToPlayQueueButton = <AddToPlayQueueButton data={tracks} />;
     }
 
     let noTracksDiv;
     if (noTracks) {
-      noTracksDiv = <NoTrack/>;
+      noTracksDiv = <NoTrack />;
     }
 
     return (
       <div className="tracks-slot">
         <div className="header clearfix">
           <h1>
-            <i className={headerIconClass}></i>
+            <i className={headerIconClass} />
             {headerSpan}
           </h1>
           <div className="control-buttons">
@@ -115,7 +121,9 @@ class TracksComponent extends Component {
         <div className="tracks-component">
           {noTracksDiv}
           {tracks.map(function(track, index) {
-            return <Track key={index} data={track} mode={trackMode} index={index}/>;
+            return (
+              <Track key={index} data={track} mode={trackMode} index={index} />
+            );
           })}
         </div>
       </div>

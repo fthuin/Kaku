@@ -26,7 +26,7 @@ class CastingManager extends EventEmitter {
       Browser.discover();
     });
 
-    Browser.on('update', (service) => {
+    Browser.on('update', service => {
       let address = service.addresses[0];
       this.services.set(address, {
         name: service.fullname || 'Unknown',
@@ -72,8 +72,7 @@ class CastingManager extends EventEmitter {
       this._client.launch(DefaultMediaReceiver, (err, player) => {
         if (err) {
           console.log(err);
-        }
-        else {
+        } else {
           this._castingPlayer = player;
           this.connected = true;
           this.emit('connected');
@@ -85,7 +84,7 @@ class CastingManager extends EventEmitter {
       this.close();
     });
 
-    this._client.on('error', (err) => {
+    this._client.on('error', err => {
       console.log('Error: %s', err.message);
       this.emit('error', err);
       this.close();
@@ -103,27 +102,28 @@ class CastingManager extends EventEmitter {
 
     if (this._castingTrack && track.isSameTrackWith(this._castingTrack)) {
       this.resume();
-    }
-    else {
+    } else {
       let media = {};
       media.contentId = track.platformTrackRealUrl;
       media.contentType = 'video/mp4';
       media.streamType = 'BUFFERED';
       media.metadata = {};
       media.metadata.title = track.title;
-      media.metadata.images = [
-        { url: track.covers.default }
-      ];
+      media.metadata.images = [{ url: track.covers.default }];
 
-      this._castingPlayer.on('status', (status) => {
+      this._castingPlayer.on('status', status => {
         console.log('status broadcast playerState=%s', status.playerState);
       });
 
-      this._castingPlayer.load(media, {
-        autoplay: true
-      }, (err, status) => {
-        console.log('media loaded playerState=%s', status.playerState);
-      });
+      this._castingPlayer.load(
+        media,
+        {
+          autoplay: true
+        },
+        (err, status) => {
+          console.log('media loaded playerState=%s', status.playerState);
+        }
+      );
 
       this._castingTrack = track;
     }

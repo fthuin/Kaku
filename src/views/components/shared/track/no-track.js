@@ -9,7 +9,7 @@ class NoTrack extends Component {
   render() {
     return (
       <div className="notracks">
-        <L10nSpan l10nId="component_no_track"/>
+        <L10nSpan l10nId="component_no_track" />
       </div>
     );
   }

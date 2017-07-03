@@ -30,7 +30,7 @@ class AppMenus {
     return {
       label: _('app_menu_kaku'),
       submenu: [
-        { role: 'about', },
+        { role: 'about' },
         { type: 'separator' },
         { role: 'services', submenu: [] },
         { type: 'separator' },
@@ -140,20 +140,29 @@ class AppMenus {
             if (track) {
               let filename = track.title + '.' + track.ext;
               let src = track.platformTrackRealUrl;
-              Dialog.showSaveDialog({
-                title: _('app_menu_where_to_download_trak'),
-                defaultPath: filename
-              }, (path) => {
-                if (path) {
-                  Notifier.alert(_('app_menu_start_download_track'));
-                  let req = DownloadManager.download(src, path);
-                  req.on('error', () => {
-                    Notifier.alert(_('app_menu_start_download_track_error'));
-                  }).on('close', () => {
-                    Notifier.alert(_('app_menu_start_download_track_success'));
-                  });
+              Dialog.showSaveDialog(
+                {
+                  title: _('app_menu_where_to_download_trak'),
+                  defaultPath: filename
+                },
+                path => {
+                  if (path) {
+                    Notifier.alert(_('app_menu_start_download_track'));
+                    let req = DownloadManager.download(src, path);
+                    req
+                      .on('error', () => {
+                        Notifier.alert(
+                          _('app_menu_start_download_track_error')
+                        );
+                      })
+                      .on('close', () => {
+                        Notifier.alert(
+                          _('app_menu_start_download_track_success')
+                        );
+                      });
+                  }
                 }
-              });
+              );
             }
           }
         }

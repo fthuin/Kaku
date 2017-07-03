@@ -18,10 +18,13 @@ class L10nManager extends EventEmitter {
     this.setMaxListeners(0);
 
     // prepare all needed strings
-    L10nMetadata.forEach((language) => {
+    L10nMetadata.forEach(language => {
       let fileName = language.lang + '.ini';
       let languageFilePath = Path.join(
-        App.getAppPath(), 'src', 'locales', fileName
+        App.getAppPath(),
+        'src',
+        'locales',
+        fileName
       );
       let rawIniData = Fs.readFileSync(languageFilePath, 'utf-8');
       this._cachedStrings[language.lang] = IniParser.parse(rawIniData);
@@ -33,8 +36,7 @@ class L10nManager extends EventEmitter {
   changeLanguage(newLanguage) {
     if (this._currentLanguage === newLanguage) {
       return;
-    }
-    else {
+    } else {
       let oldLanguage = this._currentLanguage;
       this._currentLanguage = newLanguage;
       this.emit('language-changed', newLanguage, oldLanguage);
@@ -53,18 +55,19 @@ class L10nManager extends EventEmitter {
 
     if (!replacedString) {
       console.error(
-        'You are accessing a non-exist l10nId : ', id,
-        ' in lang: ', currentLanguage);
+        'You are accessing a non-exist l10nId : ',
+        id,
+        ' in lang: ',
+        currentLanguage
+      );
 
       // If we still find nothing in `en`, we should exit directly.
       if (fallbackToEn) {
         return '';
-      }
-      else {
+      } else {
         return this.get(id, params, true);
       }
-    }
-    else {
+    } else {
       return replacedString;
     }
   }
@@ -94,16 +97,20 @@ class L10nManager extends EventEmitter {
             // in order not to get stucked in infinite loop, let's make sure
             // we would jump out.
             foundError = true;
-            console.log('we can\'t find related param - ', matchedParamKey,
-              ' to replace it, please check your passing params again');
-          }
-          else {
+            console.log(
+              "we can't find related param - ",
+              matchedParamKey,
+              ' to replace it, please check your passing params again'
+            );
+          } else {
             replacedString = replacedString.replace(
-              matchedBracketSubject, replacedParam);
+              matchedBracketSubject,
+              replacedParam
+            );
           }
         }
       }
-    } while(matched && !foundError);
+    } while (matched && !foundError);
 
     return replacedString;
   }

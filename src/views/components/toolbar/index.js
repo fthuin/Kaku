@@ -27,13 +27,13 @@ class ToolbarComponent extends Component {
       title: AppCore.title
     });
 
-    AppCore.on('titleUpdated', (title) => {
+    AppCore.on('titleUpdated', title => {
       this.setState({
         title: title
       });
     });
 
-    DownloadManager.on('download-progress', (percent) => {
+    DownloadManager.on('download-progress', percent => {
       this._processDownloadProgress(percent);
     });
 
@@ -58,8 +58,7 @@ class ToolbarComponent extends Component {
     let win = Remote.getCurrentWindow();
     if (win.isMaximized()) {
       win.unmaximize();
-    }
-    else {
+    } else {
       win.maximize();
     }
   }
@@ -82,27 +81,30 @@ class ToolbarComponent extends Component {
         <div className="toolbar-buttons">
           <span
             className="button close-button"
-            onClick={this._onCloseButtonClick}>
-              <i className="fa fa-times"></i>
+            onClick={this._onCloseButtonClick}
+          >
+            <i className="fa fa-times" />
           </span>
           <span
             className="button shrink-button"
-            onClick={this._onShrinkButtonClick}>
-              <i className="fa fa-minus"></i>
+            onClick={this._onShrinkButtonClick}
+          >
+            <i className="fa fa-minus" />
           </span>
           <span
             className="button enlarge-button"
-            onClick={this._onEnlargeButtonClick}>
-              <i className="fa fa-plus"></i>
+            onClick={this._onEnlargeButtonClick}
+          >
+            <i className="fa fa-plus" />
           </span>
         </div>
         <div className="toolbar-song-information">
           {title}
         </div>
         <div className="searchbar-slot">
-          <SearchbarComponent/>
+          <SearchbarComponent />
         </div>
-        <div className="toolbar-progressbar" style={progressStyle}></div>
+        <div className="toolbar-progressbar" style={progressStyle} />
       </div>
     );
   }

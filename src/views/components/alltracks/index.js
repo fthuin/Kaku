@@ -16,7 +16,7 @@ class AllTracksComponent extends Component {
   }
 
   componentDidMount() {
-    Searcher.on('search-results-updated', (results) => {
+    Searcher.on('search-results-updated', results => {
       this.setState({
         tracks: results
       });

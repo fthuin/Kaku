@@ -10,12 +10,12 @@ class PlayQueueComponent extends Component {
       tracks: []
     };
 
-    this._clickToPlayAll = this._clickToPlayAll.bind(this)
-    this._clickToDeleteAll = this._clickToDeleteAll.bind(this)
+    this._clickToPlayAll = this._clickToPlayAll.bind(this);
+    this._clickToDeleteAll = this._clickToDeleteAll.bind(this);
   }
 
   componentDidMount() {
-    Player.on('tracksUpdated', (tracks) => {
+    Player.on('tracksUpdated', tracks => {
       this.setState({
         tracks: tracks
       });
@@ -41,7 +41,7 @@ class PlayQueueComponent extends Component {
 
     return (
       <TracksComponent
-        headerL10nId='play_queue_header'
+        headerL10nId="play_queue_header"
         headerIconClass="fa fa-fw fa-ellipsis-h"
         controls={controls}
         tracks={tracks}

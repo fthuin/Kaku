@@ -17,9 +17,11 @@ class CommentComponent extends Component {
 
     return (
       <div className="comment">
-        <span className="comment-author">{data.userName}</span>
+        <span className="comment-author">
+          {data.userName}
+        </span>
         <div className="comment-text">
-         {emojifiedComment}
+          {emojifiedComment}
         </div>
       </div>
     );

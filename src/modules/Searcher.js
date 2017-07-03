@@ -18,19 +18,19 @@ class Searcher extends EventEmitter {
 
     // supported searchers
     this._searchers = {
-      'youtube': new YoutubeSearcher({
+      youtube: new YoutubeSearcher({
         apiKey: Constants.API.YOUTUBE_API_KEY
       }),
-      'vimeo': new VimeoSearcher({
+      vimeo: new VimeoSearcher({
         clientId: Constants.API.VIMEO_API_CLIENT_ID,
         clientSecret: Constants.API.VIMEO_API_CLIENT_SECRET
       }),
-      'soundcloud': new SoundCloudSearcher({
+      soundcloud: new SoundCloudSearcher({
         clientId: Constants.API.SOUND_CLOUD_API_CLIENT_ID,
         clientSecret: Constants.API.SOUND_CLOUD_API_CLIENT_SECRET
       }),
-      'mixcloud': new MixCloudSearcher(),
-      'all': {
+      mixcloud: new MixCloudSearcher(),
+      all: {
         search: function(keyword, limit) {
           let promises = [
             self._searchers.youtube.search(keyword, limit),
@@ -64,9 +64,8 @@ class Searcher extends EventEmitter {
   search(keyword, limit, toSave = false) {
     if (!keyword) {
       return Promise.resolve([]);
-    }
-    else {
-      return this.selectedSearcher.search(keyword, limit).then((results) => {
+    } else {
+      return this.selectedSearcher.search(keyword, limit).then(results => {
         // merge arrays into one array
         if (this._selectedSearcherName === 'all') {
           results = [].concat.apply([], results);

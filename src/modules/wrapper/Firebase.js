@@ -84,7 +84,7 @@ Firebase.joinPlayedTracksRoom = function() {
 };
 
 Firebase.leaveAll = function() {
-  Object.keys(Firebase.rooms).forEach((roomName) => {
+  Object.keys(Firebase.rooms).forEach(roomName => {
     Firebase.leave(roomName);
   });
 

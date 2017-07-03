@@ -35,21 +35,21 @@ let ChatroomComponent = React.createClass({
       }
     });
 
-    Firebase.on('meatadata-updated', (metadata) => {
+    Firebase.on('meatadata-updated', metadata => {
       this.setState({
         roomName: metadata.roomName
       });
     });
 
     // Great, if the room is opened
-    Firebase.on('setup', (userInfo) => {
+    Firebase.on('setup', userInfo => {
       // we can join to specifc room
       let commentsRef = Firebase.joinCommentsRoom();
       this.bindAsArray(commentsRef, 'comments');
 
       // if there is any comment coming when the chatroom is hidden,
       // we should show some UI for users about this
-      commentsRef.on('value', (snapshot) => {
+      commentsRef.on('value', snapshot => {
         // it will be triggered when initialized, so we need to check
         // there is indeed any value coming before keep the count.
         if (snapshot.val() && !this.state.shown) {
@@ -68,7 +68,7 @@ let ChatroomComponent = React.createClass({
       // This is special, we need to join to this special room to make sure
       // we can reflect the count of online users
       let connectedRef = Firebase.joinConnectedRoom();
-      connectedRef.on('value', (snapshot) => {
+      connectedRef.on('value', snapshot => {
         if (snapshot.val() === true) {
           // Keep current user's information to `onlineUsersRef`
           currentUserRef.set(userInfo);
@@ -86,8 +86,7 @@ let ChatroomComponent = React.createClass({
     Firebase.on('room-left', (roomName, ref) => {
       if ('comments' === roomName) {
         this.unbind('comments');
-      }
-      else if ('onlineUsers' === roomName) {
+      } else if ('onlineUsers' === roomName) {
         this.unbind('onlineUsers');
       }
     });
@@ -130,8 +129,7 @@ let ChatroomComponent = React.createClass({
     let onlineUsersCount = onlineUsers && onlineUsers.length;
     if (this.state.isRoomConnected) {
       return onlineUsersCount;
-    }
-    else {
+    } else {
       return 0;
     }
   },
@@ -148,23 +146,30 @@ let ChatroomComponent = React.createClass({
     let onlineUsersCount = this._getOnlineUsersCount();
 
     if (roomName) {
-      headerSpan = <span>{roomName}</span>;
-    }
-    else {
-      headerSpan = <L10nSpan l10nId="chatroom_header"/>;
+      headerSpan = (
+        <span>
+          {roomName}
+        </span>
+      );
+    } else {
+      headerSpan = <L10nSpan l10nId="chatroom_header" />;
     }
 
     if (unreadMessageCount > 0) {
-      unreadCountSpan = <span className="unread-count label label-danger">{unreadMessageCount}</span>;
+      unreadCountSpan = (
+        <span className="unread-count label label-danger">
+          {unreadMessageCount}
+        </span>
+      );
     }
 
     let chatroomClass = ClassNames({
-      'disabled': !enabled,
-      'chatroom': true,
-      'shown': shown,
-      'online': isRoomConnected,
-      'offline': !isRoomConnected,
-      'error': false
+      disabled: !enabled,
+      chatroom: true,
+      shown: shown,
+      online: isRoomConnected,
+      offline: !isRoomConnected,
+      error: false
     });
 
     return (
@@ -174,11 +179,12 @@ let ChatroomComponent = React.createClass({
           {headerSpan} - ({onlineUsersCount})
         </h1>
         <div className="comment-component">
-          <CommentList comments={comments}></CommentList>
+          <CommentList comments={comments} />
           <CommentForm
             onSubmit={this._onCommentSubmit}
             shown={shown}
-            connected={isRoomConnected}></CommentForm>
+            connected={isRoomConnected}
+          />
         </div>
       </div>
     );

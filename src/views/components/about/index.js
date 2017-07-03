@@ -1,7 +1,4 @@
-import {
-  clipboard as Clipboard,
-  shell as Shell
-} from 'electron';
+import { clipboard as Clipboard, shell as Shell } from 'electron';
 import React, { Component } from 'react';
 import L10nSpan from '../shared/l10n-span';
 import Dialog from '../../modules/Dialog';
@@ -20,16 +17,22 @@ class AboutComponent extends Component {
     };
 
     this._onFormSubmit = this._onFormSubmit.bind(this);
-    this._onClickToShowBitcoinModal = this._onClickToShowBitcoinModal.bind(this);
+    this._onClickToShowBitcoinModal = this._onClickToShowBitcoinModal.bind(
+      this
+    );
     this._onClickToOpenPatreon = this._onClickToOpenPatreon.bind(this);
     this._onClickToOpenFacebook = this._onClickToOpenFacebook.bind(this);
     this._onClickToOpenTwitter = this._onClickToOpenTwitter.bind(this);
     this._onClickToOpenGithub = this._onClickToOpenGithub.bind(this);
-    this._onClickToOpenGithubIssues = this._onClickToOpenGithubIssues.bind(this);
+    this._onClickToOpenGithubIssues = this._onClickToOpenGithubIssues.bind(
+      this
+    );
     this._onClickToOpenGitter = this._onClickToOpenGitter.bind(this);
     this._onClickToOpenFacebookDM = this._onClickToOpenFacebookDM.bind(this);
     this._onClickToOpenQA = this._onClickToOpenQA.bind(this);
-    this._onClickToShowSpecialThanks = this._onClickToShowSpecialThanks.bind(this);
+    this._onClickToShowSpecialThanks = this._onClickToShowSpecialThanks.bind(
+      this
+    );
   }
 
   _onFormSubmit(event) {
@@ -43,11 +46,12 @@ class AboutComponent extends Component {
     Dialog.confirm({
       title: title,
       message: walletAddress,
-      callback: (result) => {
+      callback: result => {
         if (result) {
           Clipboard.writeText(walletAddress);
           Notifier.alert(
-            _('about_option_support_click_to_copy_wallet_address_alert'));
+            _('about_option_support_click_to_copy_wallet_address_alert')
+          );
         }
       },
       buttons: {
@@ -110,8 +114,7 @@ class AboutComponent extends Component {
 
     if (thanksMessage !== '') {
       return thanksMessage;
-    }
-    else {
+    } else {
       let thanksInfo = AppCore.getInfoFromDataFolder('thanks.json');
       let author = [thanksInfo.author];
       let contributors = thanksInfo.contributors;
@@ -133,12 +136,8 @@ class AboutComponent extends Component {
 
     html += `<h1>${title}</h1>`;
     html += '<ul>';
-    list.forEach((name) =>{
-      html += [
-        '<li>',
-          name,
-        '</li>'
-      ].join('');
+    list.forEach(name => {
+      html += ['<li>', name, '</li>'].join('');
     });
     html += '</ul>';
 
@@ -150,135 +149,145 @@ class AboutComponent extends Component {
       <div className="about-slot">
         <div className="header clearfix">
           <h1>
-            <i className="fa fa-fw fa-info"></i>
-            <L10nSpan l10nId="about_header"/>
+            <i className="fa fa-fw fa-info" />
+            <L10nSpan l10nId="about_header" />
           </h1>
         </div>
         <div className="about-component">
           <p className="well">
-            <L10nSpan l10nId="about_intro"/>
+            <L10nSpan l10nId="about_intro" />
           </p>
           <form className="form-horizontal" onSubmit={this._onFormSubmit}>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_support_intro"/>
+                <L10nSpan l10nId="about_option_support_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-danger"
-                  onClick={this._onClickToShowBitcoinModal}>
-                    <i className="fa fa-btc"></i>
-                    <L10nSpan l10nId="about_option_support_button_wording"/>
+                  onClick={this._onClickToShowBitcoinModal}
+                >
+                  <i className="fa fa-btc" />
+                  <L10nSpan l10nId="about_option_support_button_wording" />
                 </button>
                 <button
                   className="btn btn-danger"
-                  onClick={this._onClickToOpenPatreon}>
-                    <i className="fa fa-credit-card"></i>
-                    <L10nSpan l10nId="about_option_support_button_patreon_wording"/>
+                  onClick={this._onClickToOpenPatreon}
+                >
+                  <i className="fa fa-credit-card" />
+                  <L10nSpan l10nId="about_option_support_button_patreon_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_facebook_intro"/>
+                <L10nSpan l10nId="about_option_facebook_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-primary"
-                  onClick={this._onClickToOpenFacebook}>
-                    <i className="fa fa-facebook-official"></i>
-                    <L10nSpan l10nId="about_option_facebook_button_wording"/>
+                  onClick={this._onClickToOpenFacebook}
+                >
+                  <i className="fa fa-facebook-official" />
+                  <L10nSpan l10nId="about_option_facebook_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_twitter_intro"/>
+                <L10nSpan l10nId="about_option_twitter_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-info"
-                  onClick={this._onClickToOpenTwitter}>
-                    <i className="fa fa-twitter"></i>
-                    <L10nSpan l10nId="about_option_twitter_button_wording"/>
+                  onClick={this._onClickToOpenTwitter}
+                >
+                  <i className="fa fa-twitter" />
+                  <L10nSpan l10nId="about_option_twitter_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_github_intro"/>
+                <L10nSpan l10nId="about_option_github_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-success"
-                  onClick={this._onClickToOpenGithub}>
-                    <i className="fa fa-github-alt"></i>
-                    <L10nSpan l10nId="about_option_github_button_wording"/>
+                  onClick={this._onClickToOpenGithub}
+                >
+                  <i className="fa fa-github-alt" />
+                  <L10nSpan l10nId="about_option_github_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_bug_intro"/>
+                <L10nSpan l10nId="about_option_bug_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-warning"
-                  onClick={this._onClickToOpenGithubIssues}>
-                    <i className="fa fa-bug"></i>
-                    <L10nSpan l10nId="about_option_bug_button_wording"/>
+                  onClick={this._onClickToOpenGithubIssues}
+                >
+                  <i className="fa fa-bug" />
+                  <L10nSpan l10nId="about_option_bug_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_special_thanks_intro"/>
+                <L10nSpan l10nId="about_option_special_thanks_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-default"
-                  onClick={this._onClickToShowSpecialThanks}>
-                    <i className="fa fa-gift"></i>
-                    <L10nSpan l10nId="about_option_special_thanks_button_wording"/>
+                  onClick={this._onClickToShowSpecialThanks}
+                >
+                  <i className="fa fa-gift" />
+                  <L10nSpan l10nId="about_option_special_thanks_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_comment_intro"/>
+                <L10nSpan l10nId="about_option_comment_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-default"
-                  onClick={this._onClickToOpenGitter}>
-                    <i className="fa fa-comments-o"></i>
-                    <L10nSpan l10nId="about_option_comment_button_wording"/>
+                  onClick={this._onClickToOpenGitter}
+                >
+                  <i className="fa fa-comments-o" />
+                  <L10nSpan l10nId="about_option_comment_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_facebook_dm_intro"/>
+                <L10nSpan l10nId="about_option_facebook_dm_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-default"
-                  onClick={this._onClickToOpenFacebookDM}>
-                    <i className="fa fa-comments-o"></i>
-                    <L10nSpan l10nId="about_option_facebook_dm_button_wording"/>
+                  onClick={this._onClickToOpenFacebookDM}
+                >
+                  <i className="fa fa-comments-o" />
+                  <L10nSpan l10nId="about_option_facebook_dm_button_wording" />
                 </button>
               </div>
             </div>
             <div className="form-group">
               <label className="col-sm-3 control-label">
-                <L10nSpan l10nId="about_option_qa_intro"/>
+                <L10nSpan l10nId="about_option_qa_intro" />
               </label>
               <div className="col-sm-9">
                 <button
                   className="btn btn-default"
-                  onClick={this._onClickToOpenQA}>
-                    <i className="fa fa-info-circle"></i>
-                    <L10nSpan l10nId="about_option_qa_button_wording"/>
+                  onClick={this._onClickToOpenQA}
+                >
+                  <i className="fa fa-info-circle" />
+                  <L10nSpan l10nId="about_option_qa_button_wording" />
                 </button>
               </div>
             </div>

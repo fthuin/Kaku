@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Electron, {
   ipcRenderer as IpcRenderer,
   shell as Shell,
-  remote as Remote,
+  remote as Remote
 } from 'electron';
 
 const Dialog = Remote.dialog;
@@ -153,8 +153,9 @@ class KakuApp extends Component {
   }
 
   _initializeDefaultTopRanking() {
-    var defaultCountryCode =
-      PreferenceManager.getPreference('default.topRanking.countryCode');
+    var defaultCountryCode = PreferenceManager.getPreference(
+      'default.topRanking.countryCode'
+    );
     if (defaultCountryCode) {
       TopRanking.changeCountry(defaultCountryCode);
     }
@@ -165,24 +166,25 @@ class KakuApp extends Component {
   }
 
   _initializeDefaultAlwaysOnTop() {
-    var defaultAlwaysOnTop =
-      PreferenceManager.getPreference('default.alwaysOnTop.enabled');
+    var defaultAlwaysOnTop = PreferenceManager.getPreference(
+      'default.alwaysOnTop.enabled'
+    );
     if (defaultAlwaysOnTop) {
       Remote.getCurrentWindow().setAlwaysOnTop(defaultAlwaysOnTop);
     }
   }
 
   _initializeDefaultChatroom() {
-    var defaultChatroom =
-      PreferenceManager.getPreference('default.chatroom.enabled');
+    var defaultChatroom = PreferenceManager.getPreference(
+      'default.chatroom.enabled'
+    );
     if (typeof defaultChatroom === 'undefined') {
       PreferenceManager.setPreference('default.chatroom.enabled', true);
     }
   }
 
   _initializeDefaultLanguage() {
-    var defaultLanguage =
-      PreferenceManager.getPreference('default.language');
+    var defaultLanguage = PreferenceManager.getPreference('default.language');
     // For new users, there is no `defaultLanguage` in DB yet.
     if (defaultLanguage) {
       L10nManager.changeLanguage(defaultLanguage);
@@ -190,8 +192,7 @@ class KakuApp extends Component {
   }
 
   _initializeDefaultSearcher() {
-    var defaultSearcher =
-      PreferenceManager.getPreference('default.searcher');
+    var defaultSearcher = PreferenceManager.getPreference('default.searcher');
     if (defaultSearcher) {
       Searcher.changeSearcher(defaultSearcher);
     }
@@ -219,13 +220,15 @@ class KakuApp extends Component {
     AutoUpdater.updateApp();
 
     Notifier.alert(_('main_autoupdate_ytdl'));
-    AutoUpdater.updateYoutubeDl().then(() => {
-      Notifier.alert(_('main_autoupdate_ytdl_success'));
-      console.log('updated youtube-dl successfully');
-    }).catch(() => {
-      Notifier.alert(_('main_autoupdate_ytdl_error'));
-      console.log('failed to update youtube-dl');
-    });
+    AutoUpdater.updateYoutubeDl()
+      .then(() => {
+        Notifier.alert(_('main_autoupdate_ytdl_success'));
+        console.log('updated youtube-dl successfully');
+      })
+      .catch(() => {
+        Notifier.alert(_('main_autoupdate_ytdl_error'));
+        console.log('failed to update youtube-dl');
+      });
   }
 
   _hideLoadingPage() {
@@ -235,85 +238,58 @@ class KakuApp extends Component {
   render() {
     return (
       <div className="root">
-        <ConnectionCheckComponent/>
-        <ChatroomComponent/>
+        <ConnectionCheckComponent />
+        <ChatroomComponent />
         <div className="row row-no-padding top-row">
           <div className="col-md-12">
             <div className="toolbar-slot">
-              <ToolbarComponent/>
+              <ToolbarComponent />
             </div>
           </div>
         </div>
         <div className="row row-no-padding bottom-row">
           <div className="left">
             <div className="sidebar">
-              <MenusComponent/>
-              <PlayerComponent/>
+              <MenusComponent />
+              <PlayerComponent />
             </div>
           </div>
           <div className="right">
             <div className="tab-content">
-              <div
-                role="tabpanel"
-                className="tab-pane active"
-                id="tab-home">
-                  <TopRankingComponent/>
+              <div role="tabpanel" className="tab-pane active" id="tab-home">
+                <TopRankingComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-news">
-                  <NewsComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-news">
+                <NewsComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-search">
-                  <AllTracksComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-search">
+                <AllTracksComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-settings">
-                  <SettingsComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-settings">
+                <SettingsComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-online-dj">
-                  <OnlineDJComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-online-dj">
+                <OnlineDJComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-about">
-                  <AboutComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-about">
+                <AboutComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-history">
-                  <HistoryComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-history">
+                <HistoryComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-play-queue">
-                  <PlayQueueComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-play-queue">
+                <PlayQueueComponent />
               </div>
-              <div
-                role="tabpanel"
-                className="tab-pane"
-                id="tab-playlist">
-                  <PlaylistComponent/>
+              <div role="tabpanel" className="tab-pane" id="tab-playlist">
+                <PlaylistComponent />
               </div>
             </div>
           </div>
         </div>
-        <ReactTooltip/>
+        <ReactTooltip />
       </div>
     );
   }
 }
 
-ReactDOM.render(<KakuApp/>, contentPageDOM);
+ReactDOM.render(<KakuApp />, contentPageDOM);

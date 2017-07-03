@@ -12,10 +12,13 @@ class ActionButton extends Component {
     let buttonSpan;
 
     if (this.props.l10nId) {
-      buttonSpan = <L10nSpan l10nId={this.props.l10nId}/>;
-    }
-    else {
-      buttonSpan = <span>{this.props.wording}</span>;
+      buttonSpan = <L10nSpan l10nId={this.props.l10nId} />;
+    } else {
+      buttonSpan = (
+        <span>
+          {this.props.wording}
+        </span>
+      );
     }
 
     return (
@@ -23,9 +26,10 @@ class ActionButton extends Component {
         type={this.props.type}
         className={this.props.buttonClass}
         onClick={this.props.onClick}
-        disabled={this.props.isDisabled}>
-          <i className={this.props.iconClass}></i>
-          {buttonSpan}
+        disabled={this.props.isDisabled}
+      >
+        <i className={this.props.iconClass} />
+        {buttonSpan}
       </button>
     );
   }

@@ -10,7 +10,7 @@ class CommentNoDataComponent extends Component {
     return (
       <div className="comment">
         <div className="comment-no-data">
-          <L10nSpan l10nId="chatroom_comment_no_data"/>
+          <L10nSpan l10nId="chatroom_comment_no_data" />
         </div>
       </div>
     );

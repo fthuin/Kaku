@@ -27,13 +27,15 @@ class PlayerControlButtons extends Component {
     this._onForwardButtonClick = this._onForwardButtonClick.bind(this);
     this._onResumeButtonClick = this._onResumeButtonClick.bind(this);
     this._onExternalButtonClick = this._onExternalButtonClick.bind(this);
-    this._onCastToDeviceButtonClick = this._onCastToDeviceButtonClick.bind(this);
+    this._onCastToDeviceButtonClick = this._onCastToDeviceButtonClick.bind(
+      this
+    );
     this._onTVButtonClick = this._onTVButtonClick.bind(this);
     this._onRepeatButtonClick = this._onRepeatButtonClick.bind(this);
   }
 
   componentDidMount() {
-    Player.on('modeUpdated', (mode) => {
+    Player.on('modeUpdated', mode => {
       this.setState({
         playerMode: mode
       });
@@ -47,7 +49,7 @@ class PlayerControlButtons extends Component {
       this._updatePlayIconState('pause');
     });
 
-    CastingManager.on('error', (error) => {
+    CastingManager.on('error', error => {
       this.setState({
         isCasting: false,
         isConnecting: false
@@ -75,8 +77,7 @@ class PlayerControlButtons extends Component {
       // show pause button
       resumeIconDOM.classList.remove('fa-play');
       resumeIconDOM.classList.add('fa-pause');
-    }
-    else {
+    } else {
       // show play button
       resumeIconDOM.classList.add('fa-play');
       resumeIconDOM.classList.remove('fa-pause');
@@ -92,11 +93,10 @@ class PlayerControlButtons extends Component {
   }
 
   _onResumeButtonClick() {
-    Player.ready().then((internalPlayer) => {
+    Player.ready().then(internalPlayer => {
       if (internalPlayer.paused()) {
         Player.play();
-      }
-      else {
+      } else {
         Player.pause();
       }
     });
@@ -114,19 +114,20 @@ class PlayerControlButtons extends Component {
       let services = CastingManager.services.values();
       let topService = services.next().value;
       if (topService) {
-        Dialog.confirm(_('player_to_cast_prompt', {
-          name: topService.name
-        }), (sure) => {
-          if (sure) {
-            CastingManager.connect(topService.address);
+        Dialog.confirm(
+          _('player_to_cast_prompt', {
+            name: topService.name
+          }),
+          sure => {
+            if (sure) {
+              CastingManager.connect(topService.address);
+            }
           }
-        });
-      }
-      else {
+        );
+      } else {
         Notifier.alert(_('player_no_device_found_alert'));
       }
-    }
-    else {
+    } else {
       CastingManager.close();
     }
   }
@@ -136,7 +137,7 @@ class PlayerControlButtons extends Component {
   }
 
   _onRepeatButtonClick() {
-    Player.ready().then((player) => {
+    Player.ready().then(player => {
       Player.changeMode();
     });
   }
@@ -165,7 +166,7 @@ class PlayerControlButtons extends Component {
 
     const castButtonClass = ClassNames({
       'cast-button': true,
-      'btn': true,
+      btn: true,
       'is-casting': this.state.isCasting,
       'is-connecting': this.state.isConnecting
     });
@@ -176,51 +177,60 @@ class PlayerControlButtons extends Component {
           l10nId="player_play_previous_track"
           className="backward-button btn"
           onClick={this._onBackwardButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-step-backward"></i>
+          where="title"
+        >
+          <i className="fa fa-fw fa-step-backward" />
         </L10nSpan>
         <L10nSpan
           l10nId="player_play_or_pause_track"
           className="resume-button btn"
           onClick={this._onResumeButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-play" ref="resumeIcon"></i>
+          where="title"
+        >
+          <i className="fa fa-fw fa-play" ref="resumeIcon" />
         </L10nSpan>
         <L10nSpan
           l10nId="player_play_next_track"
           className="forward-button btn"
           onClick={this._onForwardButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-step-forward"></i>
+          where="title"
+        >
+          <i className="fa fa-fw fa-step-forward" />
         </L10nSpan>
         <L10nSpan
           l10nId={l10nIdForRepeat}
           className="repeat-button btn"
           onClick={this._onRepeatButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-repeat"></i>
-            <span className="mode">{playerRepeatWording}</span>
+          where="title"
+        >
+          <i className="fa fa-fw fa-repeat" />
+          <span className="mode">
+            {playerRepeatWording}
+          </span>
         </L10nSpan>
         <L10nSpan
           l10nId="player_open_in_browser"
           className="external-button btn"
           onClick={this._onExternalButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-external-link"></i>
+          where="title"
+        >
+          <i className="fa fa-fw fa-external-link" />
         </L10nSpan>
         <L10nSpan
           l10nId="player_cast_to_device"
           className={castButtonClass}
           onClick={this._onCastToDeviceButtonClick}
-          where="title">
-            <img src="src/public/images/others/cast.png"/>
+          where="title"
+        >
+          <img src="src/public/images/others/cast.png" />
         </L10nSpan>
         <L10nSpan
           l10nId="player_toggle_tv_mode"
           className="tv-button btn"
           onClick={this._onTVButtonClick}
-          where="title">
-            <i className="fa fa-fw fa-television"></i>
+          where="title"
+        >
+          <i className="fa fa-fw fa-television" />
         </L10nSpan>
       </div>
     );

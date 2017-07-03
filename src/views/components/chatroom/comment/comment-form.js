@@ -64,8 +64,7 @@ class CommentFormComponent extends Component {
 
     if (isShown) {
       this.refs.text.focus();
-    }
-    else {
+    } else {
       this.refs.text.blur();
     }
   }
@@ -107,8 +106,7 @@ class CommentFormComponent extends Component {
             emojiSize={20}
             perLine={9}
             sheetURL="node_modules/emoji-mart/sheets/sheet_twitter_64.png"
-          />
-        }
+          />}
       </form>
     );
   }
@@ -121,7 +119,7 @@ CommentFormComponent.propTypes = {
 };
 
 CommentFormComponent.defaultProps = {
-  onSubmit: function() { },
+  onSubmit: function() {},
   connected: false,
   shown: false
 };

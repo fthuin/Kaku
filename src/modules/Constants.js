@@ -3,8 +3,7 @@ let Constants = {};
 try {
   Constants.API = require('../../config/api_config.production.json');
   Constants.GA = require('../../config/ga_config.json');
-}
-catch(e) {
+} catch (e) {
   Constants.API = {};
   Constants.GA = {};
 }

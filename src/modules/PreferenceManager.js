@@ -18,14 +18,11 @@ class PreferenceManager extends EventEmitter {
     const preference = this._preferenceStorage[key];
     if (preference === 'true') {
       return true;
-    }
-    else if (preference === 'false') {
+    } else if (preference === 'false') {
       return false;
-    }
-    else if (typeof preference === 'undefined') {
+    } else if (typeof preference === 'undefined') {
       return undefined;
-    }
-    else {
+    } else {
       return preference;
     }
   }

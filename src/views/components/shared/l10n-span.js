@@ -59,13 +59,11 @@ class L10nSpan extends Component {
     if (where === 'default') {
       if (!children) {
         children = translation;
-      }
-      else {
-        console.error('Can\'t assign l10nId in l10nSpan with children inside');
+      } else {
+        console.error("Can't assign l10nId in l10nSpan with children inside");
         console.error('We will directly ignore the translation here');
       }
-    }
-    else {
+    } else {
       // TODO
       // dangerous, we should add more protect
       props[where] = translation;

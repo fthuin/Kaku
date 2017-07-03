@@ -22,28 +22,31 @@ class PlaylistComponent extends Component {
         var playlistId = tabOptions;
         var playlist = PlaylistManager.findPlaylistById(playlistId);
         PlaylistManager.showPlaylistById(playlist.id);
-      }
-      else {
+      } else {
         // we should clean the internal state of activePlaylist
         PlaylistManager.hidePlaylist();
       }
     });
 
-    PlaylistManager.on('shown', (playlist) => {
-      this._boundUpdateInternalPlaylist =
-        this._updateInternalPlaylist.bind(this, playlist);
+    PlaylistManager.on('shown', playlist => {
+      this._boundUpdateInternalPlaylist = this._updateInternalPlaylist.bind(
+        this,
+        playlist
+      );
 
       this.setState({
         playlist: playlist,
         tracks: playlist.tracks
       });
 
-      playlist.removeListener('tracksUpdated',
-        this._boundUpdateInternalPlaylist);
+      playlist.removeListener(
+        'tracksUpdated',
+        this._boundUpdateInternalPlaylist
+      );
       playlist.on('tracksUpdated', this._boundUpdateInternalPlaylist);
     });
 
-    PlaylistManager.on('renamed', (playlist) => {
+    PlaylistManager.on('renamed', playlist => {
       if (playlist.id === this.state.playlist.id) {
         this._updateInternalPlaylist(playlist);
       }

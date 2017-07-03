@@ -41,33 +41,32 @@ class PlaylistManager extends EventEmitter {
 
   init() {
     return DB.get('playlists')
-      .catch((error) => {
+      .catch(error => {
         if (error.status === 404) {
           return DB.put({
             _id: 'playlists',
             playlists: []
           });
-        }
-        else {
+        } else {
           throw error;
         }
       })
-      .then((doc) => {
+      .then(doc => {
         // Transform rawData into real objects
         let playlists = doc.playlists || [];
-        this._playlists = playlists.map((rawPlaylist) => {
+        this._playlists = playlists.map(rawPlaylist => {
           return BasePlaylist.fromJSON(rawPlaylist);
         });
       })
       .then(() => {
         // bind needed events for these playlists
-        this._playlists.forEach((playlist) => {
+        this._playlists.forEach(playlist => {
           playlist.on('tracksUpdated', () => {
             this._storePlaylistsToDB();
           });
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
@@ -79,9 +78,8 @@ class PlaylistManager extends EventEmitter {
   showPlaylistById(id) {
     const playlist = this.findPlaylistById(id);
     if (!playlist) {
-      console.error('we can\'t find any playlist with id - ', id);
-    }
-    else {
+      console.error("we can't find any playlist with id - ", id);
+    } else {
       this._activePlaylist = playlist;
       this._isDisplaying = true;
       this.emit('shown', playlist);
@@ -114,10 +112,12 @@ class PlaylistManager extends EventEmitter {
       const name = options.name;
       const sameNamePlaylist = this.findPlaylistByName(name);
       if (sameNamePlaylist) {
-        reject('You already had one playlist with the same name - ' + name +
-          ', so please try another one !');
-      }
-      else {
+        reject(
+          'You already had one playlist with the same name - ' +
+            name +
+            ', so please try another one !'
+        );
+      } else {
         Tracker.event('PlaylistManager', 'add playlist', name).send();
 
         // TODO
@@ -148,8 +148,7 @@ class PlaylistManager extends EventEmitter {
       // This should not happen because we will cleanup db before importing,
       // so in order to make the other importing process work as usual,
       // the better way is to resolve it directly.
-    }
-    else {
+    } else {
       var playlist = BasePlaylist.fromJSON(options);
       this._playlists.push(playlist);
 
@@ -162,27 +161,27 @@ class PlaylistManager extends EventEmitter {
   }
 
   _storePlaylistsToDB() {
-    return DB.get('playlists').then((doc) => {
-      return DB.put({
-        _id: 'playlists',
-        _rev: doc._rev,
-        playlists: this._playlists.map((playlist) => {
-         return playlist.toJSON();
-        })
+    return DB.get('playlists')
+      .then(doc => {
+        return DB.put({
+          _id: 'playlists',
+          _rev: doc._rev,
+          playlists: this._playlists.map(playlist => {
+            return playlist.toJSON();
+          })
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   }
 
   removePlaylistById(id) {
     const promise = new Promise((resolve, reject) => {
       const index = this.findPlaylistIndexById(id);
       if (index === -1) {
-        reject('Can\'t find the playlist');
-      }
-      else {
+        reject("Can't find the playlist");
+      } else {
         const removedPlaylist = this._playlists.splice(index, 1)[0];
         this._storePlaylistsToDB().then(() => {
           // TODO
@@ -201,7 +200,7 @@ class PlaylistManager extends EventEmitter {
   }
 
   findPlaylistById(id) {
-    const playlists = this._playlists.filter((playlist) => {
+    const playlists = this._playlists.filter(playlist => {
       return playlist.id === id;
     });
 
@@ -215,7 +214,7 @@ class PlaylistManager extends EventEmitter {
   }
 
   findPlaylistByName(name) {
-    const playlists = this._playlists.filter((playlist) => {
+    const playlists = this._playlists.filter(playlist => {
       return playlist.name === name;
     });
 
@@ -226,9 +225,8 @@ class PlaylistManager extends EventEmitter {
   renamePlaylistById(id, newName) {
     const index = this.findPlaylistIndexById(id);
     if (index < 0) {
-      return Promise.reject('can\'t find playlist id - ', id);
-    }
-    else {
+      return Promise.reject("can't find playlist id - ", id);
+    } else {
       Tracker.event('PlaylistManager', 'rename playlist', newName).send();
 
       let playlist = this._playlists[index];
@@ -242,14 +240,14 @@ class PlaylistManager extends EventEmitter {
   }
 
   export() {
-    const result = this.playlists.map((playlist) => {
+    const result = this.playlists.map(playlist => {
       return playlist.toJSON();
     });
     return result;
   }
 
   cleanup() {
-    const promises = this.playlists.map((playlist) => {
+    const promises = this.playlists.map(playlist => {
       return this.removePlaylistById(playlist.id);
     });
     return Promise.all(promises).then(() => {
@@ -258,7 +256,7 @@ class PlaylistManager extends EventEmitter {
   }
 
   import(playlistObjects) {
-    playlistObjects.map((playlistObject) => {
+    playlistObjects.map(playlistObject => {
       return this._importPlaylist(playlistObject);
     });
     return this._storePlaylistsToDB().then(() => {

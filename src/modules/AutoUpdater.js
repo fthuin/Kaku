@@ -13,7 +13,7 @@ import { Downloader } from 'kaku-core/modules/YoutubeDL';
 
 const _ = L10nManager.get.bind(L10nManager);
 const ytdlDownloader = new Downloader();
-ytdlDownloader.setPath(App.getPath('userData'))
+ytdlDownloader.setPath(App.getPath('userData'));
 
 class AutoUpdater {
   constructor() {
@@ -25,15 +25,15 @@ class AutoUpdater {
       return;
     }
 
-    IpcRenderer.on('au-checking-for-update', (e) => {
+    IpcRenderer.on('au-checking-for-update', e => {
       console.log('found a new update');
     });
 
-    IpcRenderer.on('au-update-available', (e) => {
+    IpcRenderer.on('au-update-available', e => {
       console.log('update is available');
     });
 
-    IpcRenderer.on('au-update-not-available', (e) => {
+    IpcRenderer.on('au-update-not-available', e => {
       console.log('update not available');
     });
 
@@ -42,29 +42,32 @@ class AutoUpdater {
     });
 
     IpcRenderer.on('au-update-downloaded', (e, info) => {
-      let {releaseName} = info;
+      let { releaseName } = info;
 
       console.log('update downloaded');
 
       let title = _('autoupdater_found_update_title');
       let message = _('autoupdater_found_update_message', {
-        version:  releaseName
+        version: releaseName
       });
 
-      Dialog.showMessageBox({
-        type: 'question',
-        title: title,
-        message: message,
-        buttons: [
-          _('autoupdater_yes_button_wording'),
-          _('autoupdater_no_button_wording')
-        ],
-        cancelId: -1
-      }, (response) => {
-        if (response === 0) {
-          IpcRenderer.send('au-quit-and-install');
+      Dialog.showMessageBox(
+        {
+          type: 'question',
+          title: title,
+          message: message,
+          buttons: [
+            _('autoupdater_yes_button_wording'),
+            _('autoupdater_no_button_wording')
+          ],
+          cancelId: -1
+        },
+        response => {
+          if (response === 0) {
+            IpcRenderer.send('au-quit-and-install');
+          }
         }
-      });
+      );
     });
   }
 
@@ -72,7 +75,7 @@ class AutoUpdater {
     IpcRenderer.send('au-check-for-update', AppCore.isDev());
   }
 
-  updateYoutubeDl(force=false) {
+  updateYoutubeDl(force = false) {
     return ytdlDownloader.save(os.platform(), force);
   }
 }

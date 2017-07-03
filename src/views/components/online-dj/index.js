@@ -44,9 +44,8 @@ class OnlineDJComponent extends Component {
       };
       Firebase.setMetadata(metadata);
       ref.set(metadata);
-    }
-    else {
-      ref.on('value', (snapshot) => {
+    } else {
+      ref.on('value', snapshot => {
         Firebase.setMetadata(snapshot.val());
       });
     }
@@ -75,13 +74,13 @@ class OnlineDJComponent extends Component {
       <div className="online-dj-slot" data-page={page}>
         <div className="header clearfix">
           <h1>
-            <i className="fa fa-fw fa-headphones"></i>
-            <L10nSpan l10nId="online_dj_header"/>
+            <i className="fa fa-fw fa-headphones" />
+            <L10nSpan l10nId="online_dj_header" />
           </h1>
         </div>
         <div>
-          <ChooseRolePage onRoleChoose={this._onRoleChoose}/>
-          <DashboardPage userInfo={userInfo} onLeft={this._onLeft}/>
+          <ChooseRolePage onRoleChoose={this._onRoleChoose} />
+          <DashboardPage userInfo={userInfo} onLeft={this._onLeft} />
         </div>
       </div>
     );

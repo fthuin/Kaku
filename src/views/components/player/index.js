@@ -47,14 +47,14 @@ class PlayerComponent extends Component {
 
   render() {
     const playerClass = ClassNames({
-      'player': true,
+      player: true,
       'tv-mode': this.state.tvMode
     });
 
     return (
       <div className={playerClass}>
-        <PlayerTrack/>
-        <PlayerControlButtons onToggleTVMode={this._onClickToToggleTVMode}/>
+        <PlayerTrack />
+        <PlayerControlButtons onToggleTVMode={this._onClickToToggleTVMode} />
       </div>
     );
   }

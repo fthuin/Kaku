@@ -41,7 +41,7 @@ class Notifier extends EventEmitter {
     // If we are passing two parameters, because we already handled
     // args[0], so what we have to do here is handle args[1]
     if (args.length === 2) {
-      Object.keys(args[1]).each((key) => {
+      Object.keys(args[1]).each(key => {
         secondOption[key] = args[1][key];
       });
     }
@@ -55,8 +55,9 @@ class Notifier extends EventEmitter {
   }
 
   sendDesktopNotification(options) {
-    const isDesktopNotificationEnabled =
-      PreferenceManager.getPreference('desktop.notification.enabled');
+    const isDesktopNotificationEnabled = PreferenceManager.getPreference(
+      'desktop.notification.enabled'
+    );
     // TODO
     // 1. add more checks here
     // 2. change default kaku icon

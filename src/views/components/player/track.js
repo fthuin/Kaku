@@ -15,17 +15,11 @@ class PlayerTrack extends Component {
     this._setupPlayer();
   }
 
-  _onPlayerPlay() {
+  _onPlayerPlay() {}
 
-  }
+  _onPlayerPause() {}
 
-  _onPlayerPause() {
-
-  }
-
-  _onPlayerProgress() {
-
-  }
+  _onPlayerProgress() {}
 
   _setupPlayer() {
     let playerDOM = document.createElement('video');
@@ -42,10 +36,7 @@ class PlayerTrack extends Component {
 
   render() {
     return (
-      <div
-        className="playerComponent vjs-default-skin"
-        ref="playerComponent">
-      </div>
+      <div className="playerComponent vjs-default-skin" ref="playerComponent" />
     );
   }
 }

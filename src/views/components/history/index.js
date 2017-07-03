@@ -23,7 +23,7 @@ class HistoryComponent extends Component {
   }
 
   componentDidMount() {
-    HistoryManager.on('history-updated', (tracks) => {
+    HistoryManager.on('history-updated', tracks => {
       this.setState({
         tracks: tracks
       });

@@ -17,7 +17,7 @@ class RemotePlayer {
     }
     this._initialized = true;
 
-    Firebase.on('setup', (userInfo) => {
+    Firebase.on('setup', userInfo => {
       // keep this in internal variable
       this.userInfo = userInfo;
       if (userInfo.role !== 'dj') {
@@ -31,7 +31,7 @@ class RemotePlayer {
       // TODO
       // there is something wrong with the playingTime, so need to fix it later
       if (userInfo.role === 'guest') {
-        this._commandRef.on('value', (snapshot) => {
+        this._commandRef.on('value', snapshot => {
           let action = snapshot.val();
           // for the first time, there is no action at all,
           // so we will wait until everything is there
@@ -42,24 +42,21 @@ class RemotePlayer {
               let track = BaseTrack.fromJSON(data.track);
               let time = data.time;
               Player.play(track, time, true);
-            }
-            else if (command === 'stop') {
+            } else if (command === 'stop') {
               Player.stop(true);
-            }
-            else if (command === 'pause') {
+            } else if (command === 'pause') {
               Player.pause(true);
             }
           }
         });
-      }
-      else if (userInfo.role === 'dj') {
+      } else if (userInfo.role === 'dj') {
         Player.on('play', this._onPlayerPlay);
         Player.on('pause', this._onPlayerPause);
         Player.on('stop', this._onPlayerStop);
       }
     });
 
-    Firebase.on('room-left', (roomName) => {
+    Firebase.on('room-left', roomName => {
       if ('command' === roomName) {
         if (this.userInfo.role === 'dj') {
           Player.off('play', this._onPlayerPlay);

@@ -23,21 +23,23 @@ class DropboxBackuper {
 
     let folderPath = options.folderPath;
 
-    return this._isAccessTokenValid().then(() => {
-      return this._removeFolder(folderPath).then(() => {
-        return this._createFolder(folderPath).then(() => {
-          return this._writeFiles(folderPath, datas);
-        });
-      });
-    }).catch(() => {
-      return this._startOAuthToDropbox().then(() => {
+    return this._isAccessTokenValid()
+      .then(() => {
         return this._removeFolder(folderPath).then(() => {
           return this._createFolder(folderPath).then(() => {
             return this._writeFiles(folderPath, datas);
           });
         });
+      })
+      .catch(() => {
+        return this._startOAuthToDropbox().then(() => {
+          return this._removeFolder(folderPath).then(() => {
+            return this._createFolder(folderPath).then(() => {
+              return this._writeFiles(folderPath, datas);
+            });
+          });
+        });
       });
-    });
   }
 
   syncDataBack(options) {
@@ -47,20 +49,21 @@ class DropboxBackuper {
 
     let folderPath = options.folderPath;
 
-    return this._isAccessTokenValid().then(() => {
-      return this._readFiles(folderPath);
-    }).catch(() => {
-      return this._startOAuthToDropbox().then(() => {
+    return this._isAccessTokenValid()
+      .then(() => {
         return this._readFiles(folderPath);
+      })
+      .catch(() => {
+        return this._startOAuthToDropbox().then(() => {
+          return this._readFiles(folderPath);
+        });
       });
-    });
   }
 
   _isAccessTokenValid() {
     if (this._dropboxAccessToken === '') {
       return Promise.reject();
-    }
-    else {
+    } else {
       // By reading user's information, we can know whether the token is still
       // valid or not based on returned result.
       return this._dropbox.usersGetCurrentAccount();
@@ -80,10 +83,15 @@ class DropboxBackuper {
       });
       authWindow.loadURL(url);
       authWindow.show();
-      authWindow.on('close', () => {
-        authWindow = null;
-      }, false);
-      authWindow.webContents.on('did-get-redirect-request',
+      authWindow.on(
+        'close',
+        () => {
+          authWindow = null;
+        },
+        false
+      );
+      authWindow.webContents.on(
+        'did-get-redirect-request',
         (event, oldUrl, newUrl) => {
           let parsedUrl = Url.parse(newUrl);
           let hash = parsedUrl.hash;
@@ -97,36 +105,42 @@ class DropboxBackuper {
             this._dropboxAccessToken = token;
             this._dropbox.setAccessToken(token);
             resolve();
+          } else {
+            reject("can't get the right access token");
           }
-          else {
-            reject('can\'t get the right access token');
-          }
-      });
+        }
+      );
     });
   }
 
   _createFolder(folderPath) {
-    return new Promise((resolve) => {
-      this._dropbox.filesCreateFolder({
-        path: folderPath
-      }).then(() => {
-        resolve();
-      }).catch(() => {
-        // may because the folder does exist there, just ignore
-        resolve();
-      });
+    return new Promise(resolve => {
+      this._dropbox
+        .filesCreateFolder({
+          path: folderPath
+        })
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          // may because the folder does exist there, just ignore
+          resolve();
+        });
     });
   }
 
   _removeFolder(folderPath) {
-    return new Promise((resolve) => {
-      this._dropbox.filesDelete({
-        path: folderPath
-      }).then(() => {
-        resolve();
-      }).catch(() => {
-        resolve();
-      });
+    return new Promise(resolve => {
+      this._dropbox
+        .filesDelete({
+          path: folderPath
+        })
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          resolve();
+        });
     });
   }
 
@@ -135,27 +149,30 @@ class DropboxBackuper {
       let promises = [];
 
       // create file
-      datas.forEach((data) => {
+      datas.forEach(data => {
         let contents = JSON.stringify(data);
         let fileName = data.id + '.txt';
         let filePath = Path.join(folderPath, fileName);
         let promise = new Promise((resolve, reject) => {
-          this._dropbox.filesUpload({
-            path: filePath,
-            contents: contents
-          }).then((result) => {
-            resolve(result);
-          }).catch((error) => {
-            if (error) {
-              console.log(error);
-            }
-            resolve({});
-          });
+          this._dropbox
+            .filesUpload({
+              path: filePath,
+              contents: contents
+            })
+            .then(result => {
+              resolve(result);
+            })
+            .catch(error => {
+              if (error) {
+                console.log(error);
+              }
+              resolve({});
+            });
         });
         promises.push(promise);
       });
 
-      Promise.all(promises).then((updatedFiles) => {
+      Promise.all(promises).then(updatedFiles => {
         resolve(updatedFiles);
       });
     });
@@ -163,70 +180,82 @@ class DropboxBackuper {
 
   _readFiles(folderPath) {
     return new Promise((resolve, reject) => {
-      this._dropbox.filesListFolder({
-        path: folderPath
-      }).then((result) => {
-        // only need file format
-        let files = result.entries.filter((file) => {
-          return file['.tag'] === 'file';
-        });
+      this._dropbox
+        .filesListFolder({
+          path: folderPath
+        })
+        .then(result => {
+          // only need file format
+          let files = result.entries.filter(file => {
+            return file['.tag'] === 'file';
+          });
 
-        // keep only real content
-        let promises = files.map((file) => {
-          return new Promise((resolve, reject) => {
-            this._dropbox.filesDownload({
-              path: file.path_display
-            }).then((result) => {
-              // TODO check dropbox repo to see whether this got fixed
-              resolve(JSON.parse(result.fileBinary));
-            }).catch((error) => {
-              reject(error);
+          // keep only real content
+          let promises = files.map(file => {
+            return new Promise((resolve, reject) => {
+              this._dropbox
+                .filesDownload({
+                  path: file.path_display
+                })
+                .then(result => {
+                  // TODO check dropbox repo to see whether this got fixed
+                  resolve(JSON.parse(result.fileBinary));
+                })
+                .catch(error => {
+                  reject(error);
+                });
             });
           });
-        });
 
-        // then pass back
-        Promise.all(promises).then((contents) => {
-          resolve(contents);
-        }).catch((error) => {
+          // then pass back
+          Promise.all(promises)
+            .then(contents => {
+              resolve(contents);
+            })
+            .catch(error => {
+              reject(error);
+            });
+        })
+        .catch(error => {
           reject(error);
         });
-      }).catch((error) => {
-        reject(error);
-      });
     });
   }
 
   _removeOrphantFiles(folderPath, updatedFiles) {
     return new Promise((resolve, reject) => {
-      this._dropbox.filesListFolder({
-        path: folderPath
-      }).then((result) => {
-        // only need file format
-        let files = result.entries.filter((file) => {
-          return file['.tag'] === 'file';
-        });
-
-        let orphantFiles = files.filter((eachFile) => {
-          // if the file is not inside the array of updatedFiles, then
-          // it means the file is the orphant.
-          return updatedFiles.every((eachUpdatedFile) => {
-            return eachFile.path_display !== eachUpdatedFile.path_display;
+      this._dropbox
+        .filesListFolder({
+          path: folderPath
+        })
+        .then(result => {
+          // only need file format
+          let files = result.entries.filter(file => {
+            return file['.tag'] === 'file';
           });
-        });
 
-        let promises = orphantFiles.map((file) => {
-          return this._dropbox.filesDelete({
-            path: file.path
+          let orphantFiles = files.filter(eachFile => {
+            // if the file is not inside the array of updatedFiles, then
+            // it means the file is the orphant.
+            return updatedFiles.every(eachUpdatedFile => {
+              return eachFile.path_display !== eachUpdatedFile.path_display;
+            });
           });
-        });
 
-        Promise.all(promises).then(() => {
-          resolve();
-        }).catch((error) => {
-          reject(error);
+          let promises = orphantFiles.map(file => {
+            return this._dropbox.filesDelete({
+              path: file.path
+            });
+          });
+
+          Promise.all(promises)
+            .then(() => {
+              resolve();
+            })
+            .catch(error => {
+              reject(error);
+            });
         });
-      });
     });
   }
 }

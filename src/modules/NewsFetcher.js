@@ -11,8 +11,7 @@ class NewsFetcher {
         if (error) {
           reject(error);
           console.log(error);
-        }
-        else {
+        } else {
           var result = JSON.parse(body);
           resolve(result.news);
         }

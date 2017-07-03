@@ -1,8 +1,6 @@
 import React from 'react';
 import Firebase from 'firebase';
-import {
-  clipboard as Clipboard
-} from 'electron';
+import { clipboard as Clipboard } from 'electron';
 import PropTypes from 'prop-types';
 import ReactFireMixin from 'reactfire';
 import Track from '../shared/track/track';
@@ -40,7 +38,7 @@ let DashboardPage = React.createClass({
       this.bindAsArray(playedTracksRef, 'playedTracks');
     });
 
-    Firebase.on('room-left', (roomName) => {
+    Firebase.on('room-left', roomName => {
       if ('playedTracks' === roomName) {
         this.unbind('playedTracks');
       }
@@ -59,7 +57,7 @@ let DashboardPage = React.createClass({
     let role = userInfo.role;
     let roomKey = userInfo.roomKey;
     let playedTracks = this.state.playedTracks || [];
-    playedTracks = playedTracks.map((rawTrackInfo) => {
+    playedTracks = playedTracks.map(rawTrackInfo => {
       return BaseTrack.fromJSON(rawTrackInfo);
     });
 
@@ -77,40 +75,48 @@ let DashboardPage = React.createClass({
         <form className="form-inline">
           <div className="form-group">
             <label>
-              <span><i className="fa fa-fw fa-user"></i></span>
-              <L10nSpan l10nId="online_dj_dashboard_your_name"/>
+              <span>
+                <i className="fa fa-fw fa-user" />
+              </span>
+              <L10nSpan l10nId="online_dj_dashboard_your_name" />
             </label>
             <input
               type="text"
               className="form-control user-name"
               readOnly
-              value={userInfo.userName}></input>
+              value={userInfo.userName}
+            />
           </div>
           <div className="form-group">
             <label>
-              <span><i className="fa fa-fw fa-key"></i></span>
-              <L10nSpan l10nId="online_dj_dashboard_room_key"/>
+              <span>
+                <i className="fa fa-fw fa-key" />
+              </span>
+              <L10nSpan l10nId="online_dj_dashboard_room_key" />
             </label>
             <input
               type="text"
               className="form-control room-key"
               readOnly
               ref="room-key"
-              value={roomKey}></input>
+              value={roomKey}
+            />
           </div>
           <ActionButton
             buttonClass="btn btn-primary"
             iconClass="fa fa-fw fa-clipboard"
-            onClick={this._onClickToCopy}></ActionButton>
+            onClick={this._onClickToCopy}
+          />
           <ActionButton
             buttonClass="btn btn-danger"
             iconClass="fa fa-fw fa-sign-out"
             wording="Leave this room"
-            onClick={this.props.onLeft}></ActionButton>
+            onClick={this.props.onLeft}
+          />
         </form>
         <div className="tracks-component">
           {finalTracks.map(function(track, index) {
-            return <Track key={index} data={track} mode="square"/>;
+            return <Track key={index} data={track} mode="square" />;
           })}
         </div>
       </div>

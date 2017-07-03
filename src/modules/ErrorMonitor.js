@@ -8,7 +8,7 @@ const rollbarConfig = {
   captureUncaught: true,
   captureUnhandledRejections: true,
   payload: {
-    environment: env,
+    environment: env
   }
 };
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Comment from './comment';
-import CommentNoData  from './comment-no-data';
+import CommentNoData from './comment-no-data';
 
 class CommentListComponent extends Component {
   constructor(props) {
@@ -17,18 +17,19 @@ class CommentListComponent extends Component {
   render() {
     let renderedElement;
     let commentNodes = this.props.comments.map((comment, index) => {
-      return <Comment key={index} data={comment}></Comment>;
+      return <Comment key={index} data={comment} />;
     });
 
     if (commentNodes.length !== 0) {
       renderedElement = commentNodes;
-    }
-    else {
-      renderedElement = <CommentNoData></CommentNoData>;
+    } else {
+      renderedElement = <CommentNoData />;
     }
 
     return (
-      <div className="comment-list" ref="commentList">{renderedElement}</div>
+      <div className="comment-list" ref="commentList">
+        {renderedElement}
+      </div>
     );
   }
 }

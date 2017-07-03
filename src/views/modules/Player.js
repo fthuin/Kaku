@@ -18,7 +18,7 @@ import Tracker from '../../modules/Tracker';
 import Defer from 'kaku-core/modules/Defer';
 import os from 'os';
 
-TrackInfoFetcher.setPath(App.getPath('userData'))
+TrackInfoFetcher.setPath(App.getPath('userData'));
 
 const _ = L10nManager.get.bind(L10nManager);
 
@@ -50,10 +50,7 @@ Player.cache = {};
 
 // Because we share on() for customized & vjs's event,
 // we need to bind to the right place when using it.
-Player.CUSTOMIZED_EVENTS = [
-  'modeUpdated',
-  'tracksUpdated'
-];
+Player.CUSTOMIZED_EVENTS = ['modeUpdated', 'tracksUpdated'];
 
 Player.prototype.changeMode = function(mode) {
   // like Player.changeMode('no')
@@ -63,9 +60,8 @@ Player.prototype.changeMode = function(mode) {
       this.mode = mode;
       this.emit('modeUpdated', this.mode);
     }
-  }
-  // like Player.changeMode() - jump to next one
-  else {
+  } else {
+    // like Player.changeMode() - jump to next one
     let maxLength = this.modes.length;
 
     let index = this.modes.indexOf(this.mode);
@@ -106,7 +102,7 @@ Player.prototype._addPlayerEvents = function() {
     PreferenceManager.setPreference('default.volume', this._player.volume());
   });
 
-  this._player.on('error', (error) => {
+  this._player.on('error', error => {
     Notifier.alert('Unknown errors, please try again');
 
     // Some hints
@@ -122,8 +118,7 @@ Player.prototype._toggleSpinner = function(show) {
   let elem = this._player.el();
   if (show) {
     elem.classList.add('vjs-waiting');
-  }
-  else {
+  } else {
     elem.classList.remove('vjs-waiting');
   }
 };
@@ -145,13 +140,11 @@ Player.prototype.ready = function() {
     let defer = Defer();
     this._pendingReadyDefers.push(defer);
     return defer.promise;
-  }
-  else if (this._player) {
+  } else if (this._player) {
     return Promise.resolve(this._player);
-  }
-  else {
+  } else {
     let self = this;
-    let promise = new Promise((resolve) => {
+    let promise = new Promise(resolve => {
       videojs(
         this._playerDOM,
         this._getDefaultVideoJSConfig()
@@ -199,7 +192,7 @@ Player.prototype.playNextTrack = function(forceIndex) {
   }
 
   if (typeof forceIndex !== 'undefined') {
-    this.trackIndex = Math.max(0, Math.min(forceIndex, this.tracks.length -1));
+    this.trackIndex = Math.max(0, Math.min(forceIndex, this.tracks.length - 1));
     // TODO
     // double check this randomIndex later
     this.randomIndex = this.trackIndex;
@@ -212,29 +205,24 @@ Player.prototype.playNextTrack = function(forceIndex) {
 
     if (this.trackIndex >= this.tracks.length) {
       this.stop();
-    }
-    else {
+    } else {
       this.trackIndex = Math.min(this.trackIndex, this.tracks.length - 1);
       this.play(this.tracks[this.trackIndex]);
     }
-  }
-  else if (this.mode === 'random') {
+  } else if (this.mode === 'random') {
     this.randomIndex += 1;
 
     if (this.randomIndex >= this.tracks.length) {
       this.stop();
-    }
-    else {
+    } else {
       this.randomIndex = Math.min(this.randomIndex, this.tracks.length - 1);
       this.trackIndex = this.randomIndexes[this.randomIndex];
       this.play(this.tracks[this.trackIndex]);
     }
-  }
-  else if (this.mode === 'one') {
+  } else if (this.mode === 'one') {
     this.trackIndex = Math.max(0, this.trackIndex);
     this.play(this.tracks[this.trackIndex]);
-  }
-  else if (this.mode === 'all') {
+  } else if (this.mode === 'all') {
     this.trackIndex = (this.trackIndex + 1) % this.tracks.length;
     this.play(this.tracks[this.trackIndex]);
   }
@@ -250,29 +238,24 @@ Player.prototype.playPreviousTrack = function() {
 
     if (this.trackIndex < 0) {
       this.stop();
-    }
-    else {
+    } else {
       this.trackIndex = Math.max(this.trackIndex, 0);
       this.play(this.tracks[this.trackIndex]);
     }
-  }
-  else if (this.mode === 'random') {
+  } else if (this.mode === 'random') {
     this.randomIndex -= 1;
 
     if (this.randomIndex < 0) {
       this.stop();
-    }
-    else {
+    } else {
       this.randomIndex = Math.max(this.randomIndex, 0);
       this.trackIndex = this.randomIndexes[this.randomIndex];
       this.play(this.tracks[this.trackIndex]);
     }
-  }
-  else if (this.mode === 'one') {
+  } else if (this.mode === 'one') {
     this.trackIndex = Math.max(this.trackIndex, 0);
     this.play(this.tracks[this.trackIndex]);
-  }
-  else if (this.mode === 'all') {
+  } else if (this.mode === 'all') {
     this.trackIndex = Math.max(0, this.trackIndex - 1);
     this.play(this.tracks[this.trackIndex]);
   }
@@ -284,8 +267,7 @@ Player.prototype.on = function() {
 
   if (Player.CUSTOMIZED_EVENTS.indexOf(eventName) !== -1) {
     this.constructor.prototype.on.apply(this, args);
-  }
-  else {
+  } else {
     this.ready().then(() => {
       this._player.on.apply(this._player, args);
     });
@@ -298,8 +280,7 @@ Player.prototype.off = function() {
 
   if (Player.CUSTOMIZED_EVENTS.indexOf(eventName) !== -1) {
     this.constructor.prototype.removeEventListener.apply(this, args);
-  }
-  else {
+  } else {
     this.ready().then(() => {
       this._player.off.apply(this._player, args);
     });
@@ -311,13 +292,11 @@ Player.prototype._prepareTrackData = function(rawTrack) {
 
   if (Player.cache[id]) {
     return Promise.resolve(Player.cache[id]);
-  }
-  else if (id && !Player.cache[id]) {
+  } else if (id && !Player.cache[id]) {
     return Promise.resolve(rawTrack);
-  }
-  else {
+  } else {
     // This is for clicking on tracks in Top Ranking
-    let promise = new Promise((resolve) => {
+    let promise = new Promise(resolve => {
       let keyword = rawTrack.artist + ' ' + rawTrack.title;
       Searcher.search(keyword, 1).then(function(tracks) {
         let trackInfo;
@@ -344,11 +323,10 @@ Player.prototype._getRealTrack = function(track) {
 
   if (Player.cache[id]) {
     return Promise.resolve(Player.cache[id]);
-  }
-  else {
+  } else {
     let trackUrl = track.platformTrackUrl;
-    return TrackInfoFetcher.getInfo(trackUrl).then((fetchedInfo) => {
-      track.platformTrackRealUrl= fetchedInfo.url;
+    return TrackInfoFetcher.getInfo(trackUrl).then(fetchedInfo => {
+      track.platformTrackRealUrl = fetchedInfo.url;
       track.ext = fetchedInfo.ext;
       Player.cache[id] = track;
       return Promise.resolve(track);
@@ -357,7 +335,7 @@ Player.prototype._getRealTrack = function(track) {
 };
 
 Player.prototype._executePendingReadyDefers = function() {
-  this._pendingReadyDefers.forEach((defer) => {
+  this._pendingReadyDefers.forEach(defer => {
     defer.resolve(this._player);
   });
 };
@@ -416,8 +394,7 @@ Player.prototype.playOrPause = function(force) {
   this.ready().then(() => {
     if (this._player.paused()) {
       this.play();
-    }
-    else {
+    } else {
       this.pause();
     }
   });
@@ -452,16 +429,14 @@ Player.prototype.play = function(rawTrack, time, force) {
       if (this._player.paused() && this.playingTrack) {
         this._player.play();
       }
-    }
-    else {
+    } else {
       this._player.pause();
       this._toggleSpinner(true);
-      this._prepareTrackData(rawTrack).then((foundTrack) => {
+      this._prepareTrackData(rawTrack).then(foundTrack => {
         // we did find a track from searcher
         if (foundTrack) {
-          this._getRealTrack(foundTrack).then((realTrack) => {
-            Tracker.event('Player', 'play',
-              realTrack.platformTrackUrl).send();
+          this._getRealTrack(foundTrack).then(realTrack => {
+            Tracker.event('Player', 'play', realTrack.platformTrackUrl).send();
 
             this.playingTrack = realTrack;
             this._player.src(realTrack.platformTrackRealUrl);
@@ -478,12 +453,13 @@ Player.prototype.play = function(rawTrack, time, force) {
               body: realTrack.artist
             });
           });
-        }
-        else {
+        } else {
           // TODO
           // need l10n here
-          Notifier.alert('Sorry, we can\'t find the track in current ' +
-            'searcher, please try again with another searcher !');
+          Notifier.alert(
+            "Sorry, we can't find the track in current " +
+              'searcher, please try again with another searcher !'
+          );
           this._toggleSpinner(false);
         }
       });
@@ -498,9 +474,12 @@ Player.prototype.makeRandomIndexes = function(length) {
   let currentIndex = length;
 
   // length = 5 -> array = [0, 1, 2, 3, 4]
-  let array = Array.from({
-    length: length
-  }, (v, k) => k);
+  let array = Array.from(
+    {
+      length: length
+    },
+    (v, k) => k
+  );
 
   while (currentIndex !== 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);

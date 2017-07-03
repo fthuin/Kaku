@@ -5,11 +5,7 @@ import L10nManager from '../../modules/L10nManager';
 
 function Dialog() {}
 
-[ 'alert',
-  'confirm',
-  'prompt',
-  'setLocale'
-].forEach((name) => {
+['alert', 'confirm', 'prompt', 'setLocale'].forEach(name => {
   Dialog.prototype[name] = function() {
     Bootbox[name].apply(Bootbox, arguments);
   };
@@ -17,7 +13,7 @@ function Dialog() {}
 
 let dialog = new Dialog();
 
-L10nManager.on('language-changed', (newLanguage) => {
+L10nManager.on('language-changed', newLanguage => {
   let transformedLanguage = newLanguage;
 
   // TODO

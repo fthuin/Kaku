@@ -45,8 +45,7 @@ class Track extends Component {
     if (TabManager.tabName === 'play-queue') {
       let index = this.props.index;
       Player.playNextTrack(index);
-    }
-    else {
+    } else {
       let noUpdate = true;
       Player.cleanupTracks(noUpdate);
       Player.addTracks([track]);
@@ -69,24 +68,20 @@ class Track extends Component {
     let menu = new Menu();
     let playlists = PlaylistManager.playlists;
 
-    playlists.forEach((playlist) => {
-      let clickToAddTrack = ((playlist) => {
+    playlists.forEach(playlist => {
+      let clickToAddTrack = (playlist => {
         return () => {
-          playlist
-            .addTrack(track)
-            .catch((error) => {
-              Notifier.alert(error);
-            });
+          playlist.addTrack(track).catch(error => {
+            Notifier.alert(error);
+          });
         };
       })(playlist);
 
-      let clickToRemoveTrack = ((playlist) => {
+      let clickToRemoveTrack = (playlist => {
         return () => {
-          playlist
-            .removeTrack(track)
-            .catch((error) => {
-              Notifier.alert(error);
-            });
+          playlist.removeTrack(track).catch(error => {
+            Notifier.alert(error);
+          });
         };
       })(playlist);
 
@@ -105,12 +100,10 @@ class Track extends Component {
       if (PlaylistManager.isDisplaying) {
         if (PlaylistManager.activePlaylist.isSameWith(playlist)) {
           menu.append(menuItemToRemoveTrack);
-        }
-        else {
+        } else {
           menu.insert(0, menuItemToAddTrack);
         }
-      }
-      else {
+      } else {
         // TODO
         // we have to check if this track does exist in this playlist,
         // but no matter how, right now we have internal protect in
@@ -127,8 +120,8 @@ class Track extends Component {
     let track = this.props.data;
     let trackClassName = ClassNames({
       track: true,
-      'track-square': (mode === 'square'),
-      'track-list': (mode === 'list'),
+      'track-square': mode === 'square',
+      'track-list': mode === 'list',
       active: track.isSameTrackWith(this.state.playingTrack)
     });
 
@@ -170,8 +163,7 @@ class Track extends Component {
     // We will dispatch do different views here based on incoming mode
     if (mode === 'square') {
       trackUI = <TrackSquare {...trackProps} />;
-    }
-    else if (mode === 'list') {
+    } else if (mode === 'list') {
       trackUI = <TrackList {...trackProps} />;
     }
 

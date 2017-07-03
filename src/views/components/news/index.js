@@ -13,7 +13,7 @@ class NewsComponent extends Component {
   }
 
   componentDidMount() {
-    NewsFetcher.get().then((news) => {
+    NewsFetcher.get().then(news => {
       this.setState({
         news: news
       });
@@ -27,13 +27,13 @@ class NewsComponent extends Component {
       <div className="news-slot">
         <div className="header clearfix">
           <h1>
-            <i className="fa fa-fw fa-rss"></i>
-            <L10nSpan l10nId="news_header"/>
+            <i className="fa fa-fw fa-rss" />
+            <L10nSpan l10nId="news_header" />
           </h1>
         </div>
         <div className="news-component">
           {news.map((eachNews, index) => {
-            return <NewsTag key={index} data={eachNews}/>
+            return <NewsTag key={index} data={eachNews} />;
           })}
         </div>
       </div>

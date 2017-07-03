@@ -22,7 +22,7 @@ class MenusComponent extends Component {
 
     this.state = {
       playlists: []
-    }
+    };
 
     this._showTab = this._showTab.bind(this);
     this._updatePlaylistsStates = this._updatePlaylistsStates.bind(this);
@@ -44,12 +44,14 @@ class MenusComponent extends Component {
       this._updatePlaylistsStates();
     });
 
-    PlaylistManager.on('removed', (removedPlaylist) => {
+    PlaylistManager.on('removed', removedPlaylist => {
       // [Note]
       // Redirect users back to default home page, otherwise they
       // will still see deleted page on the screen.
-      if (PlaylistManager.activePlaylist &&
-        PlaylistManager.activePlaylist.id === removedPlaylist.id) {
+      if (
+        PlaylistManager.activePlaylist &&
+        PlaylistManager.activePlaylist.id === removedPlaylist.id
+      ) {
         TabManager.setTab('home');
       }
 
@@ -74,8 +76,7 @@ class MenusComponent extends Component {
 
     if (tabName === 'playlist') {
       sel = `a[href="#tab-playlist"][data-tab-options="${tabOptions}"]`;
-    }
-    else {
+    } else {
       sel = `a[href="#tab-${tabName}"]`;
     }
 
@@ -95,19 +96,17 @@ class MenusComponent extends Component {
     Dialog.prompt({
       title: _('notifier_input_playlist_name'),
       value: _('notifier_playlist') + '-' + randomSuffix,
-      callback: (rawPlaylistName) => {
+      callback: rawPlaylistName => {
         rawPlaylistName = rawPlaylistName || '';
         let sanitizedPlaylistName = rawPlaylistName.trim();
         if (!sanitizedPlaylistName) {
           // do nothing
-        }
-        else {
-          PlaylistManager
-            .addNormalPlaylist(sanitizedPlaylistName)
+        } else {
+          PlaylistManager.addNormalPlaylist(sanitizedPlaylistName)
             .then(() => {
               // playlist UI will be re-created by event
             })
-            .catch((error) => {
+            .catch(error => {
               Notifier.alert(error);
             });
         }
@@ -127,9 +126,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('home');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-home"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_home"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-home" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_home" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -138,9 +140,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('news');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-rss"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_news"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-rss" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_news" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -149,9 +154,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('search');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-search"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_search_results"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-search" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_search_results" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -160,9 +168,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('play-queue');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-ellipsis-h"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_play_queue"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-ellipsis-h" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_play_queue" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -171,9 +182,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('history');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-history"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_history"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-history" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_history" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -182,9 +196,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('settings');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-cog"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_settings"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-cog" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_settings" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -193,9 +210,12 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('online-dj');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-headphones"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_online_dj"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-headphones" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_online_dj" />
+              </span>
             </a>
           </li>
           <li role="presentation">
@@ -204,27 +224,25 @@ class MenusComponent extends Component {
               role="tab"
               onClick={function() {
                 TabManager.setTab('about');
-              }}>
-                <i className="icon fa fa-fw fa-lg fa-info"></i>
-                <span className="title"><L10nSpan l10nId="sidebar_about"/></span>
+              }}
+            >
+              <i className="icon fa fa-fw fa-lg fa-info" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_about" />
+              </span>
             </a>
           </li>
-          <li className="seperator">
-          </li>
+          <li className="seperator" />
           <li className="add-playlist">
             <a href="#" onClick={this._addPlaylist}>
-              <i className="icon fa fa-fw fa-lg fa-plus"></i>
-              <span className="title"><L10nSpan l10nId="sidebar_add_playlist"/></span>
+              <i className="icon fa fa-fw fa-lg fa-plus" />
+              <span className="title">
+                <L10nSpan l10nId="sidebar_add_playlist" />
+              </span>
             </a>
           </li>
           {playlists.map((playlist, index) => {
-            return (
-              <PlaylistUI
-                playlist={playlist}
-                key={index}
-                index={index}>
-              </PlaylistUI>
-            );
+            return <PlaylistUI playlist={playlist} key={index} index={index} />;
           })}
         </ul>
       </div>
